@@ -87,7 +87,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
           ),
           SizedBox(height: 8),
           Text(
-            '\$${product.price.toStringAsFixed(2)}',
+            '\UGX ${product.price.toStringAsFixed(2)}',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           SizedBox(height: 4),

@@ -36,4 +36,4 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/shopify.png"
+  image_path: "assets/playstore.png"
