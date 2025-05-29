@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
-//import 'signup.dart'; // for the signup link to work
+import 'signuppage.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool isHoveringForgot = false;
+  bool isHoveringSignup = false;
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -52,12 +60,28 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.centerRight,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    'Forgot password?',
-                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  child: MouseRegion(
+                    onEnter: (_) => setState(() => isHoveringForgot = true),
+                    onExit: (_) => setState(() => isHoveringForgot = false),
+                    child: GestureDetector(
+                      onTap: () {
+                        print('Forgot password?');
+                      },
+                      child: Text(
+                        'Forgot password?',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                          decoration:
+                              isHoveringForgot
+                                  ? TextDecoration.underline
+                                  : null,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -87,18 +111,26 @@ class LoginPage extends StatelessWidget {
                     'Don’t have an account? ',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => SignupPage()),
-                      );
-                    },
-                    child: Text(
-                      'Signup',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
+                  MouseRegion(
+                    onEnter: (_) => setState(() => isHoveringSignup = true),
+                    onExit: (_) => setState(() => isHoveringSignup = false),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => SignupPage()),
+                        );
+                      },
+                      child: Text(
+                        'Signup',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                          decoration:
+                              isHoveringSignup
+                                  ? TextDecoration.underline
+                                  : null,
+                        ),
                       ),
                     ),
                   ),
@@ -108,16 +140,6 @@ class LoginPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class SignupPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Signup')),
-      body: Center(child: Text('This is the Signup page')),
     );
   }
 }
