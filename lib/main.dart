@@ -103,7 +103,7 @@ class HomePage extends StatelessWidget {
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(8),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 onPressed: () {
