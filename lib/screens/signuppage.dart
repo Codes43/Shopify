@@ -17,6 +17,7 @@ class _SignUpPageState extends State<SignupPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  bool isHoveringSignin = false;
 
   bool _obscurePassword = true;
   bool _obscureConfrimPassword = true;
@@ -108,7 +109,6 @@ class _SignUpPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isHoveringSignin = false;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
