@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'signuppage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shopify/main.dart';
+import 'package:shopify/screens/homepage.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -12,17 +13,13 @@ class _LoginPageState extends State<LoginPage> {
   bool isHoveringForgot = false;
   bool isHoveringSignup = false;
 
-
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-
-  final _formKey=GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
 
-  
- Future<void> _loginUser() async {
+  Future<void> _loginUser() async {
     // Show loading indicator
     setState(() {
       isLoading = true;
@@ -47,7 +44,8 @@ class _LoginPageState extends State<LoginPage> {
       final response = await http.post(
         Uri.parse('http://10.0.2.2:8000/signin/'), // Your API login URL
         headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8', // Tell the API we're sending JSON
+          'Content-Type':
+              'application/json; charset=UTF-8', // Tell the API we're sending JSON
         },
         // Encode your data to JSON format
         body: jsonEncode(<String, String>{
@@ -71,7 +69,8 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         // Login failed ( invalid credentials, 400 Bad Request)
         final Map<String, dynamic> errorData = jsonDecode(response.body);
-        String errorMessage = errorData['error'] ?? 'An unknown error occurred.';
+        String errorMessage =
+            errorData['error'] ?? 'An unknown error occurred.';
         _showSnackBar('Login failed: $errorMessage');
         print('Login failed: ${response.statusCode} - ${response.body}');
       }
@@ -89,9 +88,9 @@ class _LoginPageState extends State<LoginPage> {
 
   // Helper function to show a SnackBar
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -119,15 +118,14 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-             
-                 Padding(
-                    padding: EdgeInsets.only(bottom: screenHeight * 0.04),
-                    child: Text(
-                      'Welcome Back',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: screenHeight * 0.04),
+                  child: Text(
+                    'Welcome Back',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
+                ),
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -136,8 +134,10 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                   validator: (value) {
-                    if (value == null || value.isEmpty || !value.contains('@')) {
+                  validator: (value) {
+                    if (value == null ||
+                        value.isEmpty ||
+                        !value.contains('@')) {
                       return 'Please enter a valid email';
                     }
                     return null;
@@ -153,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                   validator: (value) {
+                  validator: (value) {
                     if (value == null || value.isEmpty || value.length < 6) {
                       return 'Password must be at least 6 characters long';
                     }
@@ -199,14 +199,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     onPressed: () {
-                       if (_formKey.currentState!.validate()) {
-                          _loginUser();
-                          print('Login pressed');
-            
-                       }
-                      },
-                     
-                   
+                      if (_formKey.currentState!.validate()) {
+                        _loginUser();
+                        print('Login pressed');
+                      }
+                    },
+
                     child: Text('Login'),
                   ),
                 ),
