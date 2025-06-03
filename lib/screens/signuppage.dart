@@ -2,6 +2,8 @@
 // lib/screens/signup.dart
 import 'package:flutter/material.dart';
 import 'loginpage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 class SignupPage extends  StatefulWidget{
   const SignupPage({super.key});
 
@@ -18,6 +20,87 @@ class _SignUpPageState extends State<SignupPage>{
 
   bool _obscurePassword=true;
   bool _obscureConfrimPassword=true;
+
+
+  //API
+  bool isLoading = false;
+
+  
+ Future<void> _SignUpUser() async {
+    // Show loading indicator
+    setState(() {
+      isLoading = true;
+    });
+
+    // Get the values from the text controllers
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+
+    // Basic validation to ensure fields are not empty before sending
+    if (email.isEmpty || password.isEmpty ) {
+      _showSnackBar('Please enter both email and password.');
+      setState(() {
+        isLoading = false;
+      });
+    
+      return;
+    }
+   
+
+    try {
+      // Use http.post instead of just 'post'
+      // Use Uri.parse to convert the URL string into a Uri object
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8000/signup/'), // Your API login URL
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8', // Tell the API we're sending JSON
+        },
+        // Encode your data to JSON format
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Login successful!
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        print('Registration successful: $responseData');
+        _showSnackBar('Registration successful!');
+
+        // Navigate to your home screen or dashboard
+        // Ensure HomePlaceholderPage exists or replace with your actual home screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => LoginPage()),
+        );
+      } else {
+        // Login failed ( invalid credentials, 400 Bad Request)
+        final Map<String, dynamic> errorData = jsonDecode(response.body);
+        String errorMessage = errorData['error'] ?? '';
+        _showSnackBar('       Email Already exists $errorMessage');
+        print('Registration failed: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      // Handle network errors (e.g., no internet connection, API not reachable)
+      _showSnackBar('Network error: ${e.toString()}');
+      print('Error during Registration: $e');
+    } finally {
+      // Hide loading indicator regardless of success or failure
+      setState(() {
+        isLoading = false;
+      });
+    }
+ }
+ void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      
+      SnackBar(content: Text(message),
+      backgroundColor: Colors.red),
+      
+    )
+    ;
+  }
 
   @override
   void dispose() {
@@ -119,9 +202,11 @@ class _SignUpPageState extends State<SignupPage>{
                           color: Colors.black,
                         ),
                         onPressed: (){
-                          setState(() {
-                            _obscureConfrimPassword=!_obscureConfrimPassword;
-                          });
+                          if (_formKey.currentState!.validate()) {
+                          
+                          print('Login pressed');
+            
+                       }
                         },
                       ),
                     ),
@@ -149,9 +234,11 @@ class _SignUpPageState extends State<SignupPage>{
                       ),
                       onPressed: (){
                         if(_formKey.currentState!.validate()){
+                          _SignUpUser();
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Processing Data'))
                           );
+
                         }
                       },
                       child: const Text(
