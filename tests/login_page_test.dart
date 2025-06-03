@@ -14,7 +14,7 @@ void main() {
         },
         body: jsonEncode(<String, String>{
           'email': 'waneroba@gmail.com', 
-          'password': 'password123', 
+          'password': '2211', 
         }),
       );
 
@@ -31,7 +31,7 @@ void main() {
         },
         body: jsonEncode(<String, String>{
           'email': 'waneroba22@gmail.com', 
-          'password': '2211', 
+          'password': '22116', 
         }),
       );
 
