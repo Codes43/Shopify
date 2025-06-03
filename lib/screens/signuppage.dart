@@ -264,10 +264,10 @@ class _SignUpPageState extends State<SignupPage> {
                           );
                         },
                         child: Text(
-                          'Sign In',
+                          'Signup',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.red,
+                            color: const Color.fromARGB(255, 234, 174, 170),
                             decoration:
                                 isHoveringSignin
                                     ? TextDecoration.underline

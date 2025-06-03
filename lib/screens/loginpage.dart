@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'signuppage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shopify/main.dart';
+import 'package:shopify/screens/homepage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -156,8 +156,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty || value.length < 4) {
-                      return 'Password must be at least 4 characters long';
+                    if (value == null || value.isEmpty || value.length < 6) {
+                      return 'Password must be at least 6 characters long';
                     }
                     return null;
                   },
