@@ -25,7 +25,7 @@ void main() {
       await tester.pump();
       expect(find.text('Please enter a valid email'), findsOneWidget);
       expect(
-        find.text('Password must be at least 4 characters long'),
+        find.text('Password must be at least 6 characters long'),
         findsOneWidget,
       );
     });
@@ -75,7 +75,7 @@ void main() {
 
       expect(find.text('Please enter a valid email'), findsNothing);
       expect(
-        find.text('Password must be at least 4 characters long'),
+        find.text('Password must be at least 6 characters long'),
         findsNothing,
       );
     });
