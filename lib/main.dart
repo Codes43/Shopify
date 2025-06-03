@@ -124,7 +124,7 @@ class HomePage extends StatelessWidget {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => HomePage()),
+                MaterialPageRoute(builder: (_) => HomePlaceholderPage()),
               );
               break;
             case 1:
