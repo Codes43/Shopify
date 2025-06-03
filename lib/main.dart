@@ -6,6 +6,8 @@ void main() {
 }
 
 class Shopify extends StatelessWidget {
+  const Shopify({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,6 +21,8 @@ class Shopify extends StatelessWidget {
 
 class HomePage extends StatelessWidget {
   final bool isUserRegistered = false;
+
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +99,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
             SizedBox(width: 12),
-            Container(
+            SizedBox(
               height: 48,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -162,6 +166,8 @@ class HomePage extends StatelessWidget {
 }
 
 class HomePlaceholderPage extends StatelessWidget {
+  const HomePlaceholderPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,6 +178,8 @@ class HomePlaceholderPage extends StatelessWidget {
 }
 
 class BookmarkPage extends StatelessWidget {
+  const BookmarkPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -182,6 +190,8 @@ class BookmarkPage extends StatelessWidget {
 }
 
 class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
