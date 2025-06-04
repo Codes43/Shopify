@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
 import 'loginpage.dart';
+import 'searchresultspage.dart'; // Make sure this import exists
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final bool isUserRegistered = false;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +25,7 @@ class HomePage extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(91),
         child: Container(
-          color: const Color.fromARGB(255, 255, 255, 255),
+          color: Colors.white,
           child: Stack(
             children: [
               Positioned(
@@ -32,10 +45,7 @@ class HomePage extends StatelessWidget {
                 left: screenWidth * (330.06 / 390),
                 top: 39.37,
                 child: IconButton(
-                  icon: Icon(
-                    Icons.shopping_cart,
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                  ),
+                  icon: Icon(Icons.shopping_cart, color: Colors.black),
                   iconSize: 24.3,
                   onPressed: () {
                     print('To Carts Page!');
@@ -60,13 +70,11 @@ class HomePage extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.search,
-                      color: const Color.fromRGBO(158, 158, 158, 1),
-                    ),
+                    Icon(Icons.search, color: Color.fromRGBO(158, 158, 158, 1)),
                     SizedBox(width: 8),
                     Expanded(
                       child: TextField(
+                        controller: _searchController,
                         decoration: InputDecoration(
                           hintText: 'Search Product...',
                           hintStyle: TextStyle(color: Colors.grey),
@@ -91,7 +99,19 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  print('Search Button!');
+                  String searchTerm = _searchController.text.trim();
+                  if (searchTerm.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (_) => SearchResultsPage(
+                              searchTerm: searchTerm,
+                              isUserRegistered: isUserRegistered,
+                            ),
+                      ),
+                    );
+                  }
                 },
                 child: Icon(Icons.search, size: 24),
               ),
@@ -118,17 +138,13 @@ class HomePage extends StatelessWidget {
               );
               break;
             case 2:
-              if (isUserRegistered) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => ProfilePage()),
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => LoginPage()),
-                );
-              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => isUserRegistered ? ProfilePage() : LoginPage(),
+                ),
+              );
               break;
           }
         },
@@ -145,16 +161,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class HomePlaceholderPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Home Placeholder')),
-      body: Center(child: Text('This is the Home page')),
-    );
-  }
-}
-
+// Placeholder Bookmark Page
 class BookmarkPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -165,6 +172,7 @@ class BookmarkPage extends StatelessWidget {
   }
 }
 
+// Placeholder Profile Page
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
