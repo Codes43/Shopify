@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'screens/loginpage.dart';
-import 'screens/homepage.dart';
 import 'screens/splashscreen.dart'; // Add this
 
 void main() {
