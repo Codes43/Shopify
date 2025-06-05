@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'loginpage.dart';
-import 'searchresultspage.dart'; // Make sure this import exists
-import 'profilescreen.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'searchresultspage.dart'; // Ensure this import is valid
 
 class HomePage extends StatefulWidget {
   @override
@@ -25,29 +22,30 @@ class _HomePageState extends State<HomePage> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70),
+        preferredSize: Size.fromHeight(91),
         child: Container(
           color: Colors.white,
           child: Stack(
-            
             children: [
-              
               Positioned(
-                
                 left: screenWidth * (33 / 390),
-                top: 40,
+                top: 35,
                 child: Text(
-                  'Shopify',
-                  style:GoogleFonts.inriaSans(fontSize: 30,fontWeight: FontWeight.bold)
+                  'Shopifty',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inria Sans',
+                    color: Colors.black,
+                  ),
                 ),
               ),
               Positioned(
                 left: screenWidth * (330.06 / 390),
-                top: 40,
+                top: 39.37,
                 child: IconButton(
-                  icon: Icon(Icons.shopping_cart),
+                  icon: Icon(Icons.shopping_cart, color: Colors.black),
                   iconSize: 24.3,
                   onPressed: () {
                     print('To Carts Page!');
@@ -58,15 +56,12 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-
-      body: Column(
-        
-
-        children: [
-          
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-            child: Row(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
                 Expanded(
                   child: Container(
@@ -74,17 +69,20 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.search, color: Color.fromRGBO(158, 158, 158, 1)),
+                        Icon(
+                          Icons.search,
+                          color: Color.fromRGBO(158, 158, 158, 1),
+                        ),
                         SizedBox(width: 8),
                         Expanded(
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
-                              hintText: 'Search Product...',
+                              hintText: 'Search for furniture',
                               hintStyle: TextStyle(color: Colors.grey),
                               border: InputBorder.none,
                             ),
@@ -97,15 +95,13 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(width: 12),
                 Container(
                   height: 48,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
+                  width: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.tune, color: Colors.white),
                     onPressed: () {
                       String searchTerm = _searchController.text.trim();
                       if (searchTerm.isNotEmpty) {
@@ -121,31 +117,68 @@ class _HomePageState extends State<HomePage> {
                         );
                       }
                     },
-                    child: SvgPicture.asset(
-           'assets/filter.svg',
-           color: Colors.white,
-           
-           height: 70,
-           width: 70,
-         ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            SizedBox(height: 20),
+            SizedBox(
+              height: 100,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildCategoryTile(
+                      Icons.star,
+                      'Popular',
+                      isSelected: true,
+                      width: 72,
+                      height: 72,
+                      iconSize: 28,
+                    ),
+                    SizedBox(width: 12),
+                    _buildCategoryTile(
+                      Icons.chair_alt,
+                      'Chairs',
+                      width: 72,
+                      height: 72,
+                      iconSize: 28,
+                    ),
+                    SizedBox(width: 12),
+                    _buildCategoryTile(
+                      Icons.table_bar,
+                      'Tables',
+                      width: 72,
+                      height: 72,
+                      iconSize: 28,
+                    ),
+                    SizedBox(width: 12),
+                    _buildCategoryTile(
+                      Icons.weekend,
+                      'Sofas',
+                      width: 72,
+                      height: 72,
+                      iconSize: 28,
+                    ),
+                    SizedBox(width: 12),
+                    _buildCategoryTile(
+                      Icons.bed,
+                      'Beds',
+                      width: 72,
+                      height: 72,
+                      iconSize: 28,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-
-
-      //bottom navigation
       bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-
         backgroundColor: Colors.white,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
-        elevation:0 ,
         onTap: (index) {
           switch (index) {
             case 0:
@@ -182,6 +215,45 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Widget _buildCategoryTile(
+    IconData icon,
+    String label, {
+    bool isSelected = false,
+    double width = 64,
+    double height = 64,
+    double iconSize = 28,
+    double borderRadius = 16,
+  }) {
+    return Column(
+      children: [
+        Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.black : Colors.white,
+            borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: Center(
+            child: Icon(
+              icon,
+              color: isSelected ? Colors.white : Colors.black54,
+              size: iconSize,
+            ),
+          ),
+        ),
+        SizedBox(height: 6),
+        Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.black : Colors.grey[600],
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 // Placeholder Bookmark Page
@@ -196,4 +268,12 @@ class BookmarkPage extends StatelessWidget {
 }
 
 // Placeholder Profile Page
-
+class ProfilePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Your Profile')),
+      body: Center(child: Text('This is the Profile page')),
+    );
+  }
+}
