@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'loginpage.dart';
 import 'searchresultspage.dart'; // Ensure this import is valid
 
@@ -30,9 +31,9 @@ class _HomePageState extends State<HomePage> {
             children: [
               Positioned(
                 left: screenWidth * (33 / 390),
-                top: 35,
+                top: 45,
                 child: Text(
-                  'Shopifty',
+                  'Shopify',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -132,49 +133,77 @@ class _HomePageState extends State<HomePage> {
                       Icons.star,
                       'Popular',
                       isSelected: true,
-                      width: 72,
-                      height: 72,
-                      iconSize: 28,
+                    width: 62,
+                      height: 62,
+                      iconSize: 35,
                     ),
                     SizedBox(width: 12),
                     _buildCategoryTile(
                       Icons.chair_alt,
                       'Chairs',
-                      width: 72,
-                      height: 72,
-                      iconSize: 28,
+                      width: 62,
+                      height: 62,
+                      iconSize: 35,
                     ),
                     SizedBox(width: 12),
                     _buildCategoryTile(
                       Icons.table_bar,
                       'Tables',
-                      width: 72,
-                      height: 72,
-                      iconSize: 28,
+                      width: 62,
+                      height: 62,
+                      iconSize: 35,
                     ),
                     SizedBox(width: 12),
                     _buildCategoryTile(
                       Icons.weekend,
                       'Sofas',
-                      width: 72,
-                      height: 72,
-                      iconSize: 28,
+                      width: 62,
+                      height: 62,
+                      iconSize: 35,
                     ),
                     SizedBox(width: 12),
                     _buildCategoryTile(
                       Icons.bed,
                       'Beds',
-                      width: 72,
-                      height: 72,
-                      iconSize: 28,
+                      width: 62,
+                      height: 62,
+                      iconSize: 35,
                     ),
                   ],
                 ),
               ),
             ),
+           // carousel_sliderfor ADS
+           
+       CarouselSlider(
+  options: CarouselOptions(height: 400.0,  autoPlay: true,              
+    autoPlayInterval: Duration(seconds: 3),  
+    autoPlayAnimationDuration: Duration(milliseconds: 800),  
+    autoPlayCurve: Curves.fastOutSlowIn,     
+    pauseAutoPlayOnTouch: true,  
+    viewportFraction: 1.0,   ),
+  items: imgList.map((image) {
+    return Builder(
+      builder: (BuildContext context) {
+        return Container(
+          width: MediaQuery.of(context).size.width,
+          height:500,
+          margin: EdgeInsets.symmetric(horizontal: 5.0),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(26, 226, 19, 19),
+          ),
+          child: image, // Use the image widget here
+        );
+      },
+    );
+  }).toList(),
+)
           ],
         ),
       ),
+
+
+      //bottom nav
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         selectedItemColor: Colors.black,
@@ -215,6 +244,17 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+
+
+  // category class
+  List imgList = [
+    Image.asset('assets/user.png'),
+    Image.asset('assets/splash.png'),
+    Image.asset('assets/user.png'),
+    Image.asset('assets/splash.png'),
+   
+  ];
 
   Widget _buildCategoryTile(
     IconData icon,
@@ -277,3 +317,4 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
+ 
