@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'homepage.dart'; // Make sure this matches your import path
+import 'homepage.dart'; 
+import 'package:google_fonts/google_fonts.dart';
+
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     // Navigate to HomePage after 2 seconds
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => HomePage()),
@@ -27,20 +29,20 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.shopping_bag,
-              size: 80,
-              color: Colors.black,
-            ), // Logo/Icon
+            Container(
+              padding: EdgeInsets.only(top: 185),
+              child: Image.asset("assets/splash.png")), // Logo/Icon
             SizedBox(height: 20),
-            Text(
-              'Shopifty',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inria Sans',
-              ),
+            Container(
+              child:Column( children: [ Text(
+                'Shopify',
+                style: GoogleFonts.inriaSans(color: Colors.black,fontSize: 38,fontWeight: FontWeight.bold)
+              
             ),
+            Text(
+              'online store',
+              style: GoogleFonts.inriaSans(fontSize: 25,color: Colors.black38),
+            )]))
           ],
         ),
       ),
