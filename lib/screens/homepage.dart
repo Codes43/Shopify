@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'loginpage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'searchresultspage.dart'; // Ensure this import is valid
 
 class HomePage extends StatefulWidget {
@@ -23,30 +24,30 @@ class _HomePageState extends State<HomePage> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 243, 243, 243),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(91),
+        
+        preferredSize: Size.fromHeight(81),
+        
         child: Container(
-          color: Colors.white,
+          color: Colors.black,
+          
           child: Stack(
+            
             children: [
               Positioned(
                 left: screenWidth * (33 / 390),
                 top: 45,
                 child: Text(
                   'Shopify',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Inria Sans',
-                    color: Colors.black,
-                  ),
+                  style: GoogleFonts.inriaSans(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold)
                 ),
               ),
               Positioned(
                 left: screenWidth * (330.06 / 390),
-                top: 39.37,
+                top: 45,
                 child: IconButton(
-                  icon: Icon(Icons.shopping_cart, color: Colors.black),
+                  icon: Icon(Icons.shopping_cart, color: Colors.white),
                   iconSize: 24.3,
                   onPressed: () {
                     print('To Carts Page!');
@@ -163,6 +164,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(width: 12),
                     _buildCategoryTile(
+                      Icons.weekend,
+                      'Sofas',
+                      width: 62,
+                      height: 62,
+                      iconSize: 35,
+                    ),
+                    SizedBox(width: 12),
+                    _buildCategoryTile(
                       Icons.bed,
                       'Beds',
                       width: 62,
@@ -173,31 +182,40 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+
+
            // carousel_sliderfor ADS
            
-       CarouselSlider(
-  options: CarouselOptions(height: 400.0,  autoPlay: true,              
+   CarouselSlider(
+        
+    options: CarouselOptions(height: 300.0,  
+    autoPlay: true,             
     autoPlayInterval: Duration(seconds: 3),  
     autoPlayAnimationDuration: Duration(milliseconds: 800),  
     autoPlayCurve: Curves.fastOutSlowIn,     
-    pauseAutoPlayOnTouch: true,  
+    pauseAutoPlayOnTouch: true,
+    
     viewportFraction: 1.0,   ),
   items: imgList.map((image) {
     return Builder(
       builder: (BuildContext context) {
         return Container(
           width: MediaQuery.of(context).size.width,
-          height:500,
+          height:300,
           margin: EdgeInsets.symmetric(horizontal: 5.0),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(26, 226, 19, 19),
+            color: const Color.fromARGB(26, 100, 98, 98),
+            borderRadius: BorderRadius.circular(15.0),
+            
           ),
-          child: image, // Use the image widget here
+          child: image, 
         );
       },
     );
   }).toList(),
-)
+),
+SizedBox(height: 5.0,),
+Text("Products",style: GoogleFonts.inriaSans(color: Colors.black,fontSize: 28, fontWeight: FontWeight.bold),)
           ],
         ),
       ),
