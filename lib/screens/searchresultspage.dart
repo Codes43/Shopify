@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'loginpage.dart';
-import 'homepage.dart';
+
+import 'package:shopify/screens/profilescreen.dart'; // <-- ADD THIS (or wherever ProfilePage is located)
+import 'package:shopify/screens/loginpage.dart';
+import 'package:shopify/screens/homepage.dart';
 
 class SearchResultsPage extends StatefulWidget {
   final String searchTerm;
