@@ -4,7 +4,7 @@ import 'package:shopify/models/product_model.dart';
 
 class ProductService {
 
-  final String _baseUrl = 'http://127.0.0.1:8000/products/'; 
+  final String _baseUrl = 'http://10.0.2.2:8000/products/'; 
   Future<List<Product>> getProducts() async {
     try {
       final response = await http.get(Uri.parse(_baseUrl));
@@ -23,8 +23,6 @@ class ProductService {
         print('Response body: ${response.body}');
         throw Exception('Failed to load products: Server returned status ${response.statusCode}');
       }
-
-      // this helps me to brainstorm out
     } catch (e) {
       if (e is http.ClientException) {
         print('Error fetching products (Network Issue): $e');

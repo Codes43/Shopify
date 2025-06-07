@@ -3,8 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'loginpage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'searchresultspage.dart'; 
-import 'package:http/http.dart' as http; // Import http package
-import 'dart:convert'; // Import for json.decode
+
 import 'package:shopify/models/product_model.dart'; // Import your Product model
 import 'package:shopify/services/product_service.dart'; 
 
@@ -42,11 +41,11 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: const Color.fromARGB(255, 243, 243, 243),
       appBar: PreferredSize(
         
+        
         preferredSize: Size.fromHeight(81),
         
         child: Container(
           color: Colors.black,
-          
           child: Stack(
             
             children: [
@@ -115,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                     height: 48,
                     width: 48,
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: const Color.fromARGB(255, 158, 153, 153),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: IconButton(
@@ -216,6 +215,7 @@ class _HomePageState extends State<HomePage> {
             return Builder(
         builder: (BuildContext context) {
           return Container(
+            
             width: MediaQuery.of(context).size.width,
             height:300,
             margin: EdgeInsets.symmetric(horizontal: 5.0),
@@ -224,7 +224,10 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(15.0),
               
             ),
-            child: image, 
+             child: ClipRRect(
+            borderRadius: BorderRadius.circular(15.0), // Apply the same border radius here
+            child: image, // This is your Image.asset widget
+          ),
           );
         },
             );
@@ -249,13 +252,10 @@ class _HomePageState extends State<HomePage> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Center(child: Text('No products found.'));
                   } else {
-                    // Calculate the number of rows needed to determine the height
                     final int itemCount = snapshot.data!.length;
                     // Assuming 2 items per row
                     final int numRows = (itemCount / 2).ceil();
-                    // Calculate item height from childAspectRatio (0.75 height relative to width)
                     // (width / 2) * 0.75 (for aspectRatio) + mainAxisSpacing
-                    // This is a simplified calculation, you might need to adjust based on exact item dimensions.
                     final double itemHeight = (MediaQuery.of(context).size.width / 2) * 0.75;
                     final double gridHeight = (numRows * itemHeight) + ((numRows - 1) * 16); // 16 is mainAxisSpacing
 
@@ -383,16 +383,25 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+        
       ),
     );
   }
 
   // category class
   List imgList = [
-    Image.asset('assets/user.png'),
-    Image.asset('assets/splash.png'),
-    Image.asset('assets/user.png'),
-    Image.asset('assets/splash.png'),
+    Image.asset('assets/splash.png',  width: double.infinity,
+      height: double.infinity,
+      fit: BoxFit.cover,),
+    Image.asset('assets/images (1).jpg',  width: double.infinity,
+      height: double.infinity,
+      fit: BoxFit.cover,),
+    Image.asset('assets/images (2).jpg',  width: double.infinity,
+      height: double.infinity, 
+      fit: BoxFit.cover,),
+    Image.asset('assets/images.jpg',  width: double.infinity,
+      height: double.infinity,
+      fit: BoxFit.cover),
    
   ];
 
