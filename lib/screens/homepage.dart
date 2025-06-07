@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'loginpage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'searchresultspage.dart'; // Ensure this import is valid
+import 'searchresultspage.dart'; 
+import 'package:http/http.dart' as http; // Import http package
+import 'dart:convert'; // Import for json.decode
+import 'package:shopify/models/product_model.dart'; // Import your Product model
+import 'package:shopify/services/product_service.dart'; 
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,6 +18,15 @@ class _HomePageState extends State<HomePage> {
   final bool isUserRegistered = false;
   final TextEditingController _searchController = TextEditingController();
 
+
+  late Future<List<Product>> _productsFuture; // Declare a Future for products
+  final ProductService _productService = ProductService(); // Instantiate your service
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = _productService.getProducts(); // Initialize the future in initState
+  }
   @override
   void dispose() {
     _searchController.dispose();
@@ -21,6 +35,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+  
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -58,165 +73,218 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 48,
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search,
-                          color: Color.fromRGBO(158, 158, 158, 1),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              hintText: 'Search for furniture',
-                              hintStyle: TextStyle(color: Colors.grey),
-                              border: InputBorder.none,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 48,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search,
+                            color: Color.fromRGBO(158, 158, 158, 1),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              decoration: InputDecoration(
+                                hintText: 'Search for furniture',
+                                hintStyle: TextStyle(color: Colors.grey),
+                                border: InputBorder.none,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: 12),
-                Container(
-                  height: 48,
-                  width: 48,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(12),
+                  SizedBox(width: 12),
+                  Container(
+                    height: 48,
+                    width: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.tune, color: Colors.white),
+                      onPressed: () {
+                        String searchTerm = _searchController.text.trim();
+                        if (searchTerm.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => SearchResultsPage(
+                                    searchTerm: searchTerm,
+                                    isUserRegistered: isUserRegistered,
+                                  ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
-                  child: IconButton(
-                    icon: Icon(Icons.tune, color: Colors.white),
-                    onPressed: () {
-                      String searchTerm = _searchController.text.trim();
-                      if (searchTerm.isNotEmpty) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) => SearchResultsPage(
-                                  searchTerm: searchTerm,
-                                  isUserRegistered: isUserRegistered,
-                                ),
-                          ),
-                        );
-                      }
-                    },
+                ],
+              ),
+              SizedBox(height: 20),
+              SizedBox(
+                height: 100,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildCategoryTile(
+                        Icons.star,
+                        'Popular',
+                        isSelected: true,
+                      width: 62,
+                        height: 62,
+                        iconSize: 35,
+                      ),
+                      SizedBox(width: 12),
+                      _buildCategoryTile(
+                        Icons.chair_alt,
+                        'Chairs',
+                        width: 62,
+                        height: 62,
+                        iconSize: 35,
+                      ),
+                      SizedBox(width: 12),
+                      _buildCategoryTile(
+                        Icons.table_bar,
+                        'Tables',
+                        width: 62,
+                        height: 62,
+                        iconSize: 35,
+                      ),
+                      SizedBox(width: 12),
+                      _buildCategoryTile(
+                        Icons.weekend,
+                        'Sofas',
+                        width: 62,
+                        height: 62,
+                        iconSize: 35,
+                      ),
+                      SizedBox(width: 12),
+                      _buildCategoryTile(
+                        Icons.weekend,
+                        'Sofas',
+                        width: 62,
+                        height: 62,
+                        iconSize: 35,
+                      ),
+                      SizedBox(width: 12),
+                      _buildCategoryTile(
+                        Icons.bed,
+                        'Beds',
+                        width: 62,
+                        height: 62,
+                        iconSize: 35,
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            SizedBox(
-              height: 100,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildCategoryTile(
-                      Icons.star,
-                      'Popular',
-                      isSelected: true,
-                    width: 62,
-                      height: 62,
-                      iconSize: 35,
-                    ),
-                    SizedBox(width: 12),
-                    _buildCategoryTile(
-                      Icons.chair_alt,
-                      'Chairs',
-                      width: 62,
-                      height: 62,
-                      iconSize: 35,
-                    ),
-                    SizedBox(width: 12),
-                    _buildCategoryTile(
-                      Icons.table_bar,
-                      'Tables',
-                      width: 62,
-                      height: 62,
-                      iconSize: 35,
-                    ),
-                    SizedBox(width: 12),
-                    _buildCategoryTile(
-                      Icons.weekend,
-                      'Sofas',
-                      width: 62,
-                      height: 62,
-                      iconSize: 35,
-                    ),
-                    SizedBox(width: 12),
-                    _buildCategoryTile(
-                      Icons.weekend,
-                      'Sofas',
-                      width: 62,
-                      height: 62,
-                      iconSize: 35,
-                    ),
-                    SizedBox(width: 12),
-                    _buildCategoryTile(
-                      Icons.bed,
-                      'Beds',
-                      width: 62,
-                      height: 62,
-                      iconSize: 35,
-                    ),
-                  ],
                 ),
               ),
-            ),
-
-
-           // carousel_sliderfor ADS
-           
-   CarouselSlider(
         
-    options: CarouselOptions(height: 300.0,  
-    autoPlay: true,             
-    autoPlayInterval: Duration(seconds: 3),  
-    autoPlayAnimationDuration: Duration(milliseconds: 800),  
-    autoPlayCurve: Curves.fastOutSlowIn,     
-    pauseAutoPlayOnTouch: true,
-    
-    viewportFraction: 1.0,   ),
-  items: imgList.map((image) {
-    return Builder(
-      builder: (BuildContext context) {
-        return Container(
-          width: MediaQuery.of(context).size.width,
-          height:300,
-          margin: EdgeInsets.symmetric(horizontal: 5.0),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(26, 100, 98, 98),
-            borderRadius: BorderRadius.circular(15.0),
+        
+             // carousel_sliderfor ADS
+             
+           CarouselSlider(
+          
+            options: CarouselOptions(height: 300.0,  
+            autoPlay: true,             
+            autoPlayInterval: Duration(seconds: 3),  
+            autoPlayAnimationDuration: Duration(milliseconds: 800),  
+            autoPlayCurve: Curves.fastOutSlowIn,     
+            pauseAutoPlayOnTouch: true,
             
+            viewportFraction: 1.0,   ),
+          items: imgList.map((image) {
+            return Builder(
+        builder: (BuildContext context) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height:300,
+            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(26, 100, 98, 98),
+              borderRadius: BorderRadius.circular(15.0),
+              
+            ),
+            child: image, 
+          );
+        },
+            );
+          }).toList(),
+        ),
+        SizedBox(height: 5.0,),
+        Text("Products",style: GoogleFonts.inriaSans(color: Colors.black,fontSize: 28, fontWeight: FontWeight.bold),)
+             , 
+             
+             FutureBuilder<List<Product>>(
+                future: _productsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Error loading products: ${snapshot.error}',
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No products found.'));
+                  } else {
+                    // Calculate the number of rows needed to determine the height
+                    final int itemCount = snapshot.data!.length;
+                    // Assuming 2 items per row
+                    final int numRows = (itemCount / 2).ceil();
+                    // Calculate item height from childAspectRatio (0.75 height relative to width)
+                    // (width / 2) * 0.75 (for aspectRatio) + mainAxisSpacing
+                    // This is a simplified calculation, you might need to adjust based on exact item dimensions.
+                    final double itemHeight = (MediaQuery.of(context).size.width / 2) * 0.75;
+                    final double gridHeight = (numRows * itemHeight) + ((numRows - 1) * 16); // 16 is mainAxisSpacing
+
+                    return SizedBox( // Use SizedBox to give the GridView a bounded height
+                      height: gridHeight, // Dynamically calculate height
+                      child: GridView.builder(
+                        padding: EdgeInsets.all(0),
+                        itemCount: itemCount,
+                        shrinkWrap: true, // Crucial: GridView will only take up needed space
+                        physics: NeverScrollableScrollPhysics(), // Crucial: Disable GridView's own scrolling
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.75,
+                        ),
+                        itemBuilder: (context, index) {
+                          Product product = snapshot.data![index];
+                          return _buildProductGridItem(product);
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+           
+           
+            ],
           ),
-          child: image, 
-        );
-      },
-    );
-  }).toList(),
-),
-SizedBox(height: 5.0,),
-Text("Products",style: GoogleFonts.inriaSans(color: Colors.black,fontSize: 28, fontWeight: FontWeight.bold),)
-          ],
         ),
       ),
 
@@ -263,7 +331,61 @@ Text("Products",style: GoogleFonts.inriaSans(color: Colors.black,fontSize: 28, f
     );
   }
 
-
+ Widget _buildProductGridItem(Product product) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Center(
+                child: product.imageUrl.isNotEmpty
+                    ? Image.network(
+                        product.imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Icon(Icons.broken_image, size: 50), // Placeholder for broken image
+                      )
+                    : Icon(Icons.image_not_supported, size: 50), // No image available
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              product.name,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            SizedBox(height: 4),
+            // Text(
+            //   product.description,
+            //   style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+            //   maxLines: 2,
+            //   overflow: TextOverflow.ellipsis,
+            // ),
+            
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Text(
+                '\UGX ${product.price.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: const Color.fromARGB(255, 13, 35, 236)
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   // category class
   List imgList = [
