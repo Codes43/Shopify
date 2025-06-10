@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'loginpage.dart';
 import 'homepage.dart';
+import 'profilescreen.dart';
 
 class SearchResultsPage extends StatefulWidget {
   final String searchTerm;
