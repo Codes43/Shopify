@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-
-
-  class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
@@ -21,17 +19,12 @@ import 'package:flutter/material.dart';
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // User Profile Image
-           
-                   Image.asset(
-                    "assets/user.png", 
-                    fit: BoxFit.cover,
-                    width: 160,
-                    height: 160,
-                  
-                  ),
-                
-            
-              
+              Image.asset(
+                "assets/user.png",
+                fit: BoxFit.cover,
+                width: 160,
+                height: 160,
+              ),
 
               // Username
               Text(
@@ -45,46 +38,38 @@ import 'package:flutter/material.dart';
               const SizedBox(height: 10),
 
               // Email
-              Text("shopify@gmail.com",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey[700],
-                ),
+              Text(
+                "shopify@gmail.com",
+                style: TextStyle(fontSize: 18, color: Colors.grey[700]),
               ),
               const SizedBox(height: 40),
 
-               ElevatedButton(
-                
-                    style: ElevatedButton.styleFrom(
-                      
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    onPressed: () { 
-                       print('Login pressed');
-
-                    },
-
-                    child: Container(
-                      width: 100,
-
-                      child: Row(
-
-                        children: [
-                          
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(Icons.logout,),
-                          ),
-                          Text('Logout',style: TextStyle(),),
-                        ],
-                      ),
-                    ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-             
+                ),
+                onPressed: () {
+                  print('Login pressed');
+                },
+
+                child: SizedBox(
+                  width: 100,
+
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.logout),
+                      ),
+                      Text('Logout', style: TextStyle()),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
