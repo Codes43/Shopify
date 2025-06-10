@@ -1,12 +1,11 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'loginpage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'searchresultspage.dart'; 
-
-import 'package:shopify/models/product_model.dart'; // Import your Product model
-import 'package:shopify/services/product_service.dart'; 
-
+import 'searchresultspage.dart';
+import 'package:shopify/models/product_model.dart';
+import 'package:shopify/services/product_service.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,16 +15,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final bool isUserRegistered = false;
   final TextEditingController _searchController = TextEditingController();
-
-
-  late Future<List<Product>> _productsFuture; // Declare a Future for products
-  final ProductService _productService = ProductService(); // Instantiate your service
+  late Future<List<Product>> _productsFuture;
+  final ProductService _productService = ProductService();
 
   @override
   void initState() {
     super.initState();
-    _productsFuture = _productService.getProducts(); // Initialize the future in initState
+    _productsFuture = _productService.getProducts();
   }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -34,262 +32,197 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-  
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 243, 243, 243),
       appBar: PreferredSize(
-        
-        
         preferredSize: Size.fromHeight(81),
-        
         child: Container(
           color: Colors.black,
-          child: Stack(
-            
-            children: [
-              Positioned(
-                left: screenWidth * (33 / 390),
-                top: 45,
-                child: Text(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth < 600 ? 16.0 : 32.0,
+          ),
+          child: SafeArea(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
                   'Shopify',
-                  style: GoogleFonts.inriaSans(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold)
+                  style: GoogleFonts.inriaSans(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Positioned(
-                left: screenWidth * (330.06 / 390),
-                top: 45,
-                child: IconButton(
+                IconButton(
                   icon: Icon(Icons.shopping_cart, color: Colors.white),
-                  iconSize: 24.3,
-                  onPressed: () {
-                    print('To Carts Page!');
-                  },
+                  onPressed: () => print("To Cart Page"),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 48,
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.search,
-                            color: Color.fromRGBO(158, 158, 158, 1),
-                          ),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              controller: _searchController,
-                              decoration: InputDecoration(
-                                hintText: 'Search for furniture',
-                                hintStyle: TextStyle(color: Colors.grey),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                  Container(
-                    height: 48,
-                    width: 48,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 158, 153, 153),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.tune, color: Colors.white),
-                      onPressed: () {
-                        String searchTerm = _searchController.text.trim();
-                        if (searchTerm.isNotEmpty) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (_) => SearchResultsPage(
-                                    searchTerm: searchTerm,
-                                    isUserRegistered: isUserRegistered,
-                                  ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 1000),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 20.0,
               ),
-              SizedBox(height: 20),
-              SizedBox(
-                height: 100,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      _buildCategoryTile(
-                        Icons.star,
-                        'Popular',
-                        isSelected: true,
-                      width: 62,
-                        height: 62,
-                        iconSize: 35,
+                      Expanded(
+                        child: Container(
+                          height: 48,
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.search, color: Colors.grey),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: TextField(
+                                  controller: _searchController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Search for furniture',
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       SizedBox(width: 12),
-                      _buildCategoryTile(
-                        Icons.chair_alt,
-                        'Chairs',
-                        width: 62,
-                        height: 62,
-                        iconSize: 35,
-                      ),
-                      SizedBox(width: 12),
-                      _buildCategoryTile(
-                        Icons.table_bar,
-                        'Tables',
-                        width: 62,
-                        height: 62,
-                        iconSize: 35,
-                      ),
-                      SizedBox(width: 12),
-                      _buildCategoryTile(
-                        Icons.weekend,
-                        'Sofas',
-                        width: 62,
-                        height: 62,
-                        iconSize: 35,
-                      ),
-                      SizedBox(width: 12),
-                      _buildCategoryTile(
-                        Icons.weekend,
-                        'Sofas',
-                        width: 62,
-                        height: 62,
-                        iconSize: 35,
-                      ),
-                      SizedBox(width: 12),
-                      _buildCategoryTile(
-                        Icons.bed,
-                        'Beds',
-                        width: 62,
-                        height: 62,
-                        iconSize: 35,
+                      Container(
+                        height: 48,
+                        width: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.tune, color: Colors.white),
+                          onPressed: () {
+                            String searchTerm = _searchController.text.trim();
+                            if (searchTerm.isNotEmpty) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => SearchResultsPage(
+                                        searchTerm: searchTerm,
+                                        isUserRegistered: isUserRegistered,
+                                      ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ),
-        
-        
-             // carousel_sliderfor ADS
-             
-           CarouselSlider(
-          
-            options: CarouselOptions(height: 300.0,  
-            autoPlay: true,             
-            autoPlayInterval: Duration(seconds: 3),  
-            autoPlayAnimationDuration: Duration(milliseconds: 800),  
-            autoPlayCurve: Curves.fastOutSlowIn,     
-            pauseAutoPlayOnTouch: true,
-            
-            viewportFraction: 1.0,   ),
-          items: imgList.map((image) {
-            return Builder(
-        builder: (BuildContext context) {
-          return Container(
-            
-            width: MediaQuery.of(context).size.width,
-            height:300,
-            margin: EdgeInsets.symmetric(horizontal: 5.0),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(26, 100, 98, 98),
-              borderRadius: BorderRadius.circular(15.0),
-              
-            ),
-             child: ClipRRect(
-            borderRadius: BorderRadius.circular(15.0), // Apply the same border radius here
-            child: image, // This is your Image.asset widget
-          ),
-          );
-        },
-            );
-          }).toList(),
-        ),
-        SizedBox(height: 5.0,),
-        Text("Products",style: GoogleFonts.inriaSans(color: Colors.black,fontSize: 28, fontWeight: FontWeight.bold),)
-             , 
-             
-             FutureBuilder<List<Product>>(
-                future: _productsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        'Error loading products: ${snapshot.error}',
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No products found.'));
-                  } else {
-                    final int itemCount = snapshot.data!.length;
-                    // Assuming 2 items per row
-                    final int numRows = (itemCount / 2).ceil();
-                    // (width / 2) * 0.75 (for aspectRatio) + mainAxisSpacing
-                    final double itemHeight = (MediaQuery.of(context).size.width / 2) * 0.75;
-                    final double gridHeight = (numRows * itemHeight) + ((numRows - 1) * 16); // 16 is mainAxisSpacing
-
-                    return SizedBox( // Use SizedBox to give the GridView a bounded height
-                      height: gridHeight, // Dynamically calculate height
-                      child: GridView.builder(
-                        padding: EdgeInsets.all(0),
-                        itemCount: itemCount,
-                        shrinkWrap: true, // Crucial: GridView will only take up needed space
-                        physics: NeverScrollableScrollPhysics(), // Crucial: Disable GridView's own scrolling
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 0.75,
+                  SizedBox(height: 20),
+                  SizedBox(
+                    height: 100,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _buildCategoryTile(
+                          Icons.star,
+                          'Popular',
+                          isSelected: true,
                         ),
-                        itemBuilder: (context, index) {
-                          Product product = snapshot.data![index];
-                          return _buildProductGridItem(product);
-                        },
-                      ),
-                    );
-                  }
-                },
+                        _buildCategoryTile(Icons.chair_alt, 'Chairs'),
+                        _buildCategoryTile(Icons.table_bar, 'Tables'),
+                        _buildCategoryTile(Icons.weekend, 'Sofas'),
+                        _buildCategoryTile(Icons.bed, 'Beds'),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      height: screenWidth > 800 ? 400 : 200,
+                      autoPlay: true,
+                      viewportFraction: 1.0,
+                    ),
+                    items:
+                        imgList.map((image) {
+                          return Builder(
+                            builder: (context) {
+                              return Container(
+                                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  color: Colors.grey[200],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  child: image,
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "Products",
+                    style: GoogleFonts.inriaSans(
+                      color: Colors.black,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  FutureBuilder<List<Product>>(
+                    future: _productsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(child: Text('No products found.'));
+                      } else {
+                        final products = snapshot.data!;
+                        return GridView.builder(
+                          padding: EdgeInsets.only(top: 16),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: products.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: (screenWidth / 250).floor(),
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                                childAspectRatio: 0.75,
+                              ),
+                          itemBuilder:
+                              (context, index) =>
+                                  _buildProductGridItem(products[index]),
+                        );
+                      }
+                    },
+                  ),
+                ],
               ),
-           
-           
-            ],
+            ),
           ),
         ),
       ),
-
-
-      //bottom nav
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         selectedItemColor: Colors.black,
@@ -331,7 +264,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
- Widget _buildProductGridItem(Product product) {
+  Widget _buildProductGridItem(Product product) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -342,34 +275,19 @@ class _HomePageState extends State<HomePage> {
           children: [
             Expanded(
               child: Center(
-                child: product.imageUrl.isNotEmpty
-                    ? Image.network(
-                        product.imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Icon(Icons.broken_image, size: 50), // Placeholder for broken image
-                      )
-                    : Icon(Icons.image_not_supported, size: 50), // No image available
+                child:
+                    product.imageUrl.isNotEmpty
+                        ? Image.network(product.imageUrl, fit: BoxFit.cover)
+                        : Icon(Icons.image_not_supported, size: 50),
               ),
             ),
             SizedBox(height: 8),
             Text(
               product.name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 4),
-            // Text(
-            //   product.description,
-            //   style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-            //   maxLines: 2,
-            //   overflow: TextOverflow.ellipsis,
-            // ),
-            
             Align(
               alignment: Alignment.bottomRight,
               child: Text(
@@ -377,33 +295,15 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
-                  color: const Color.fromARGB(255, 13, 35, 236)
+                  color: const Color.fromARGB(255, 13, 35, 236),
                 ),
               ),
             ),
           ],
         ),
-        
       ),
     );
   }
-
-  // category class
-  List imgList = [
-    Image.asset('assets/splash.png',  width: double.infinity,
-      height: double.infinity,
-      fit: BoxFit.cover,),
-    Image.asset('assets/images (1).jpg',  width: double.infinity,
-      height: double.infinity,
-      fit: BoxFit.cover,),
-    Image.asset('assets/images (2).jpg',  width: double.infinity,
-      height: double.infinity, 
-      fit: BoxFit.cover,),
-    Image.asset('assets/images.jpg',  width: double.infinity,
-      height: double.infinity,
-      fit: BoxFit.cover),
-   
-  ];
 
   Widget _buildCategoryTile(
     IconData icon,
@@ -414,38 +314,47 @@ class _HomePageState extends State<HomePage> {
     double iconSize = 28,
     double borderRadius = 16,
   }) {
-    return Column(
-      children: [
-        Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.black : Colors.white,
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: Center(
-            child: Icon(
-              icon,
-              color: isSelected ? Colors.white : Colors.black54,
-              size: iconSize,
+    return Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: Column(
+        children: [
+          Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.black : Colors.white,
+              borderRadius: BorderRadius.circular(borderRadius),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Center(
+              child: Icon(
+                icon,
+                color: isSelected ? Colors.white : Colors.black54,
+                size: iconSize,
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 6),
-        Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.black : Colors.grey[600],
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          SizedBox(height: 6),
+          Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? Colors.black : Colors.grey[600],
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+
+  List<Image> imgList = [
+    Image.asset('assets/splash.png', fit: BoxFit.cover),
+    Image.asset('assets/images (1).jpg', fit: BoxFit.cover),
+    Image.asset('assets/images (2).jpg', fit: BoxFit.cover),
+    Image.asset('assets/images.jpg', fit: BoxFit.cover),
+  ];
 }
 
-// Placeholder Bookmark Page
 class BookmarkPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -456,7 +365,6 @@ class BookmarkPage extends StatelessWidget {
   }
 }
 
-// Placeholder Profile Page
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -466,4 +374,3 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
- 
