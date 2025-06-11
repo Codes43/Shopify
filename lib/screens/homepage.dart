@@ -69,9 +69,11 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+
                 IconButton(
                   icon: Icon(Icons.shopping_cart, color: Colors.white),
                   onPressed: () => print("To Cart Page"),
+
                 ),
               ],
             ),
@@ -275,7 +277,7 @@ class _HomePageState extends State<HomePage> {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => ProductDetails()),
+                MaterialPageRoute(builder: (_) => BookmarkPage()),
               );
               break;
             case 2:
@@ -302,20 +304,41 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildProductGridItem(Product product) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Center(
-                child:
-                    product.imageUrl.isNotEmpty
-                        ? Image.network(product.imageUrl, fit: BoxFit.cover)
-                        : Icon(Icons.image_not_supported, size: 50),
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
+        );
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Center(
+                  child:
+                      product.imageUrl.isNotEmpty
+                          ? Image.network(
+                            product.imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) => Icon(
+                                  Icons.broken_image,
+                                  size: 50,
+                                ), // Placeholder for broken image
+                          )
+                          : Icon(
+                            Icons.image_not_supported,
+                            size: 50,
+                          ), // No image available
+                ),
+ 
               ),
             ),
             SizedBox(height: 8),

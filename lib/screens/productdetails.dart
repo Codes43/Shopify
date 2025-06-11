@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'loginpage.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'searchresultspage.dart';
+import 'package:shopify/models/product_model.dart';
 
-import 'package:shopify/models/product_model.dart'; // Import your Product model
-import 'package:shopify/services/product_service.dart';
+// Import your Product model
 
 class ProductDetails extends StatefulWidget {
-  const ProductDetails({super.key});
+  final Product product;
+  const ProductDetails({super.key, required this.product});
 
   @override
   State<ProductDetails> createState() => _ProductPageState();
@@ -79,7 +76,20 @@ class _ProductPageState extends State<ProductDetails> {
               ),
               child: Stack(
                 children: [
-                  Center(child: Image.asset("assets/unnamed.jpg")),
+                  Center(
+                    child:
+                        widget.product.imageUrl.isNotEmpty
+                            ? Image.network(
+                              widget.product.imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (context, error, stackTrace) => Icon(
+                                    Icons.broken_image,
+                                    size: 50,
+                                  ), // Placeholder for broken image
+                            )
+                            : Icon(Icons.image_not_supported, size: 50),
+                  ),
                   Positioned(
                     top: 8,
                     right: 8,
@@ -106,8 +116,8 @@ class _ProductPageState extends State<ProductDetails> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: const Text(
-                    'Single sitter',
+                  child: Text(
+                    widget.product.name,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -125,8 +135,8 @@ class _ProductPageState extends State<ProductDetails> {
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-              'UGX  500,000',
+            Text(
+              'UGX  ${widget.product.price}',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -135,8 +145,8 @@ class _ProductPageState extends State<ProductDetails> {
             ),
 
             const SizedBox(height: 24),
-            const Text(
-              'Minhai Sidi is a product by matura video. The design takes many simple and minimal. This is truly one of the best thinkers in any family for now.',
+            Text(
+              widget.product.description,
               style: TextStyle(fontSize: 16, height: 1.5),
             ),
 
