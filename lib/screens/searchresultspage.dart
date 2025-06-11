@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'loginpage.dart';
 import 'homepage.dart';
+import 'profilescreen.dart';
 
 class SearchResultsPage extends StatefulWidget {
   final String searchTerm;
   final bool isUserRegistered;
 
-  SearchResultsPage({required this.searchTerm, required this.isUserRegistered});
+  const SearchResultsPage({
+    super.key,
+    required this.searchTerm,
+    required this.isUserRegistered,
+  });
 
   @override
   _SearchResultsPageState createState() => _SearchResultsPageState();

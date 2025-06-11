@@ -1,11 +1,21 @@
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shopify/screens/productdetails.dart';
 import 'loginpage.dart';
+import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'searchresultspage.dart';
-import 'package:shopify/models/product_model.dart';
+
+import 'package:shopify/models/product_model.dart'; // Import your Product model
 import 'package:shopify/services/product_service.dart';
+import 'searchresultspage.dart'; 
+import 'package:shopify/services/auth_service.dart';
+import 'package:shopify/models/product_model.dart'; // Import your Product model
+import 'package:shopify/services/product_service.dart'; 
+import 'package:shopify/screens/profilescreen.dart';
+
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,10 +28,15 @@ class _HomePageState extends State<HomePage> {
   late Future<List<Product>> _productsFuture;
   final ProductService _productService = ProductService();
 
+
+
+
   @override
   void initState() {
     super.initState();
-    _productsFuture = _productService.getProducts();
+
+    _productsFuture =
+        _productService.getProducts(); // Initialize the future in initState
   }
 
   @override
@@ -32,10 +47,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    final authService = Provider.of<AuthService>(context);
+    final isUserRegistered = authService.isAuthenticated;
+  
+
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 243, 243),
+      backgroundColor: const Color.fromARGB(255, 247, 246, 246),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(81.0),
         child: Container(
@@ -50,6 +71,9 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text(
                   'Shopify',
+
+
+
                   style: GoogleFonts.inriaSans(
                     color: Colors.white,
                     fontSize: 30,
@@ -59,6 +83,7 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   icon: Icon(Icons.shopping_cart, color: Colors.white),
                   onPressed: () => print("To Cart Page"),
+
                 ),
               ],
             ),
@@ -146,7 +171,8 @@ class _HomePageState extends State<HomePage> {
                         Icons.star,
                         'Popular',
                         isSelected: true,
-                        screenWidth: screenWidth,
+                        screenWidth: screenWi
+     
                       ),
                       _buildCategoryTile(
                         Icons.chair_alt,
@@ -227,6 +253,7 @@ class _HomePageState extends State<HomePage> {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: products.length,
+
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: (screenWidth / 250).floor(),
                           crossAxisSpacing: 16,
@@ -245,6 +272,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         selectedItemColor: Colors.black,
@@ -260,15 +288,14 @@ class _HomePageState extends State<HomePage> {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => BookmarkPage()),
+                MaterialPageRoute(builder: (_) => ProductDetails()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (_) => isUserRegistered ? ProfilePage() : LoginPage(),
+                  builder: (_) => isUserRegistered ? ProfilePage() : LoginPage(),
                 ),
               );
               break;
@@ -318,14 +345,16 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                   color: const Color.fromARGB(255, 13, 35, 236),
+
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
+
 
   Widget _buildCategoryTile(
     IconData icon,
@@ -415,12 +444,4 @@ class BookmarkPage extends StatelessWidget {
   }
 }
 
-class ProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Your Profile')),
-      body: Center(child: Text('This is the Profile page')),
-    );
-  }
-}
+

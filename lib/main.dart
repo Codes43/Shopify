@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'screens/splashscreen.dart'; // Add this
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'services/auth_service.dart';
 
-void main() {
-  runApp(Shopify());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final authService = AuthService();
+  await authService.initialize(); // Initialize auth service
+  
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => authService,
+      child: Shopify(),
+    ),
+  );
 }
 
 class Shopify extends StatelessWidget {
