@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                           height: 48,
                           padding: EdgeInsets.symmetric(horizontal: 12),
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: const Color.fromARGB(255, 255, 255, 255),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                                 child: TextField(
                                   controller: _searchController,
                                   decoration: InputDecoration(
-                                    hintText: 'Search for furniture',
+                                    hintText: 'Search for Products',
                                     hintStyle: TextStyle(color: Colors.grey),
                                     border: InputBorder.none,
                                   ),
@@ -110,11 +110,11 @@ class _HomePageState extends State<HomePage> {
                         height: 48,
                         width: 48,
                         decoration: BoxDecoration(
-                          color: Colors.grey,
+                          color: const Color.fromARGB(255, 0, 0, 0),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.tune, color: Colors.white),
+                          icon: Icon(Icons.search, color: Colors.white),
                           onPressed: () {
                             String searchTerm = _searchController.text.trim();
                             if (searchTerm.isNotEmpty) {
