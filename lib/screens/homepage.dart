@@ -37,11 +37,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 243, 243, 243),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(81),
+        preferredSize: Size.fromHeight(81.0),
         child: Container(
           color: Colors.black,
           padding: EdgeInsets.symmetric(
             horizontal: screenWidth < 600 ? 16.0 : 32.0,
+            vertical: 16.0,
           ),
           child: SafeArea(
             child: Row(
@@ -173,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(height: 20),
                 CarouselSlider(
                   options: CarouselOptions(
-                    height: screenWidth > 800 ? 400 : 200,
+                    height: screenWidth > 800 ? 280 : 400,
                     autoPlay: true,
                     viewportFraction: 1.0,
                   ),
@@ -182,13 +183,21 @@ class _HomePageState extends State<HomePage> {
                         return Builder(
                           builder: (context) {
                             return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 5.0),
+                              // Remove the Center widget and set width to double.infinity for wide screens
+                              width: double.infinity,
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 0,
+                              ), // Remove extra margin
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15.0),
+                                borderRadius: BorderRadius.circular(
+                                  screenWidth > 800 ? 12.0 : 15.0,
+                                ),
                                 color: Colors.grey[200],
                               ),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15.0),
+                                borderRadius: BorderRadius.circular(
+                                  screenWidth > 800 ? 12.0 : 15.0,
+                                ),
                                 child: image,
                               ),
                             );
@@ -398,6 +407,7 @@ class _HomePageState extends State<HomePage> {
     Image.asset('assets/images (1).jpg', fit: BoxFit.cover),
     Image.asset('assets/images (2).jpg', fit: BoxFit.cover),
     Image.asset('assets/images.jpg', fit: BoxFit.cover),
+    Image.asset('assets/big_image.jpg', fit: BoxFit.cover),
   ];
 }
 
