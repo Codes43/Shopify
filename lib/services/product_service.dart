@@ -13,13 +13,12 @@ class ProductService {
       if (response.statusCode == 200) {
         print('API Response Status: ${response.statusCode}');
         print('API Response Body Length: ${response.body.length} bytes');
-        // print('API Response Body: ${response.body}'); // Uncomment for full body if needed
 
         List<dynamic> productJson = json.decode(response.body);
 
         // Map each JSON map to a Product object using the fromJson factory
         return productJson.map((json) => Product.fromJson(json)).toList();
-      } else {
+      } else{
         print('Failed to load products. Status Code: ${response.statusCode}');
         print('Response body: ${response.body}');
         throw Exception(

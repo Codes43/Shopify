@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shopify/screens/productdetails.dart';
 import 'loginpage.dart';
+import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'searchresultspage.dart';
 
 import 'package:shopify/models/product_model.dart'; // Import your Product model
 import 'package:shopify/services/product_service.dart';
+import 'searchresultspage.dart'; 
+import 'package:shopify/services/auth_service.dart';
+import 'package:shopify/models/product_model.dart'; // Import your Product model
+import 'package:shopify/services/product_service.dart'; 
+import 'package:shopify/screens/profilescreen.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -36,15 +43,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = Provider.of<AuthService>(context);
+    final isUserRegistered = authService.isAuthenticated;
+  
+
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 243, 243),
+      backgroundColor: const Color.fromARGB(255, 247, 246, 246),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(81),
 
         child: Container(
-          color: Colors.black,
+          color: Colors.white,
           child: Stack(
             children: [
               Positioned(
@@ -52,18 +64,21 @@ class _HomePageState extends State<HomePage> {
                 top: 45,
                 child: Text(
                   'Shopify',
+
                   style: GoogleFonts.inriaSans(
                     color: Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
+
+     
                 ),
               ),
               Positioned(
                 left: screenWidth * (330.06 / 390),
                 top: 45,
                 child: IconButton(
-                  icon: Icon(Icons.shopping_cart, color: Colors.white),
+                  icon: Icon(Icons.shopping_cart, color: const Color.fromARGB(255, 14, 13, 13)),
                   iconSize: 24.3,
                   onPressed: () {
                     print('To Carts Page!');
@@ -323,8 +338,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (_) => isUserRegistered ? ProfilePage() : LoginPage(),
+                  builder: (_) => isUserRegistered ? ProfilePage() : LoginPage(),
                 ),
               );
               break;
@@ -489,13 +503,3 @@ class BookmarkPage extends StatelessWidget {
   }
 }
 
-// Placeholder Profile Page
-class ProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Your Profile')),
-      body: Center(child: Text('This is the Profile page')),
-    );
-  }
-}
