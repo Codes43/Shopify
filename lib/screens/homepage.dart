@@ -376,7 +376,7 @@ class _HomePageState extends State<HomePage> {
             Align(
               alignment: Alignment.bottomRight,
               child: Text(
-                '\UGX ${product.price.toStringAsFixed(2)}',
+                '\UGX ${product.price.toStringAsFixed(0)}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
