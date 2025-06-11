@@ -134,7 +134,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(height: 20),
                 SizedBox(
-                  height: 100,
+                  height:
+                      screenWidth > 800
+                          ? 36
+                          : 100, // 36 for wide, 100 for mobile
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
@@ -142,11 +145,28 @@ class _HomePageState extends State<HomePage> {
                         Icons.star,
                         'Popular',
                         isSelected: true,
+                        screenWidth: screenWidth,
                       ),
-                      _buildCategoryTile(Icons.chair_alt, 'Chairs'),
-                      _buildCategoryTile(Icons.table_bar, 'Tables'),
-                      _buildCategoryTile(Icons.weekend, 'Sofas'),
-                      _buildCategoryTile(Icons.bed, 'Beds'),
+                      _buildCategoryTile(
+                        Icons.chair_alt,
+                        'Chairs',
+                        screenWidth: screenWidth,
+                      ),
+                      _buildCategoryTile(
+                        Icons.table_bar,
+                        'Tables',
+                        screenWidth: screenWidth,
+                      ),
+                      _buildCategoryTile(
+                        Icons.weekend,
+                        'Sofas',
+                        screenWidth: screenWidth,
+                      ),
+                      _buildCategoryTile(
+                        Icons.bed,
+                        'Beds',
+                        screenWidth: screenWidth,
+                      ),
                     ],
                   ),
                 ),
@@ -305,41 +325,71 @@ class _HomePageState extends State<HomePage> {
     IconData icon,
     String label, {
     bool isSelected = false,
-    double width = 64,
-    double height = 64,
-    double iconSize = 28,
-    double borderRadius = 16,
+    required double screenWidth,
   }) {
+    bool isWideScreen = screenWidth > 800;
+
     return Padding(
       padding: const EdgeInsets.only(right: 12.0),
-      child: Column(
-        children: [
-          Container(
-            width: width,
-            height: height,
-            decoration: BoxDecoration(
-              color: isSelected ? Colors.black : Colors.white,
-              borderRadius: BorderRadius.circular(borderRadius),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
-            child: Center(
-              child: Icon(
-                icon,
-                color: isSelected ? Colors.white : Colors.black54,
-                size: iconSize,
+      child:
+          isWideScreen
+              ? Container(
+                width: 120,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.black : Colors.white,
+                  borderRadius: BorderRadius.circular(9),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      icon,
+                      color: isSelected ? Colors.white : Colors.black54,
+                      size: 28,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      label,
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : Colors.black87,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+              : Column(
+                children: [
+                  Container(
+                    width: 64,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: isSelected ? Colors.black : Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        icon,
+                        color: isSelected ? Colors.white : Colors.black54,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: isSelected ? Colors.black : Colors.grey[600],
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-          SizedBox(height: 6),
-          Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.black : Colors.grey[600],
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
