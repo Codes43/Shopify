@@ -8,12 +8,11 @@ import 'searchresultspage.dart';
 
 import 'package:shopify/models/product_model.dart'; // Import your Product model
 import 'package:shopify/services/product_service.dart';
-import 'searchresultspage.dart'; 
+import 'searchresultspage.dart';
 import 'package:shopify/services/auth_service.dart';
 import 'package:shopify/models/product_model.dart'; // Import your Product model
-import 'package:shopify/services/product_service.dart'; 
+import 'package:shopify/services/product_service.dart';
 import 'package:shopify/screens/profilescreen.dart';
-
 
 class HomePage extends StatefulWidget {
   @override
@@ -43,10 +42,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     final authService = Provider.of<AuthService>(context);
     final isUserRegistered = authService.isAuthenticated;
-  
 
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -70,15 +67,16 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
-
-     
                 ),
               ),
               Positioned(
                 left: screenWidth * (330.06 / 390),
                 top: 45,
                 child: IconButton(
-                  icon: Icon(Icons.shopping_cart, color: const Color.fromARGB(255, 14, 13, 13)),
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: const Color.fromARGB(255, 14, 13, 13),
+                  ),
                   iconSize: 24.3,
                   onPressed: () {
                     print('To Carts Page!');
@@ -331,14 +329,15 @@ class _HomePageState extends State<HomePage> {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => ProductDetails()),
+                MaterialPageRoute(builder: (_) => BookmarkPage()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => isUserRegistered ? ProfilePage() : LoginPage(),
+                  builder:
+                      (_) => isUserRegistered ? ProfilePage() : LoginPage(),
                 ),
               );
               break;
@@ -361,7 +360,7 @@ class _HomePageState extends State<HomePage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => ProductDetails()),
+          MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
         );
       },
       child: Card(
@@ -502,4 +501,3 @@ class BookmarkPage extends StatelessWidget {
     );
   }
 }
-
