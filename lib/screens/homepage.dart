@@ -183,11 +183,8 @@ class _HomePageState extends State<HomePage> {
                         return Builder(
                           builder: (context) {
                             return Container(
-                              // Remove the Center widget and set width to double.infinity for wide screens
                               width: double.infinity,
-                              margin: EdgeInsets.symmetric(
-                                horizontal: 0,
-                              ), // Remove extra margin
+                              margin: EdgeInsets.symmetric(horizontal: 0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(
                                   screenWidth > 800 ? 12.0 : 15.0,
@@ -404,9 +401,6 @@ class _HomePageState extends State<HomePage> {
 
   List<Image> imgList = [
     Image.asset('assets/splash.png', fit: BoxFit.cover),
-    Image.asset('assets/images (1).jpg', fit: BoxFit.cover),
-    Image.asset('assets/images (2).jpg', fit: BoxFit.cover),
-    Image.asset('assets/images.jpg', fit: BoxFit.cover),
     Image.asset('assets/big_image.jpg', fit: BoxFit.cover),
   ];
 }
