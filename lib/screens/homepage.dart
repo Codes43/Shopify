@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shopify/screens/productdetails.dart';
 import 'loginpage.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'searchresultspage.dart';
+
+import 'package:shopify/models/product_model.dart'; // Import your Product model
+import 'package:shopify/services/product_service.dart';
 import 'searchresultspage.dart'; 
 import 'package:shopify/services/auth_service.dart';
 import 'package:shopify/models/product_model.dart'; // Import your Product model
@@ -19,15 +24,17 @@ class _HomePageState extends State<HomePage> {
   final bool isUserRegistered = false;
   final TextEditingController _searchController = TextEditingController();
 
-
   late Future<List<Product>> _productsFuture; // Declare a Future for products
-  final ProductService _productService = ProductService(); // Instantiate your service
+  final ProductService _productService =
+      ProductService(); // Instantiate your service
 
   @override
   void initState() {
     super.initState();
-    _productsFuture = _productService.getProducts(); // Initialize the future in initState
+    _productsFuture =
+        _productService.getProducts(); // Initialize the future in initState
   }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -36,29 +43,35 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     final authService = Provider.of<AuthService>(context);
     final isUserRegistered = authService.isAuthenticated;
   
+
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 247, 246, 246),
       appBar: PreferredSize(
-        
-        
         preferredSize: Size.fromHeight(81),
-        
+
         child: Container(
           color: Colors.white,
           child: Stack(
-            
             children: [
               Positioned(
                 left: screenWidth * (33 / 390),
                 top: 45,
                 child: Text(
                   'Shopify',
-                  style: GoogleFonts.inriaSans(color: const Color.fromARGB(255, 12, 12, 12),fontSize: 30,fontWeight: FontWeight.bold)
+
+                  style: GoogleFonts.inriaSans(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+
+     
                 ),
               ),
               Positioned(
@@ -153,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                         Icons.star,
                         'Popular',
                         isSelected: true,
-                      width: 62,
+                        width: 62,
                         height: 62,
                         iconSize: 35,
                       ),
@@ -201,47 +214,53 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-        
-        
-             // carousel_sliderfor ADS
-             
-           CarouselSlider(
-          
-            options: CarouselOptions(height: 300.0,  
-            autoPlay: true,             
-            autoPlayInterval: Duration(seconds: 3),  
-            autoPlayAnimationDuration: Duration(milliseconds: 800),  
-            autoPlayCurve: Curves.fastOutSlowIn,     
-            pauseAutoPlayOnTouch: true,
-            
-            viewportFraction: 1.0,   ),
-          items: imgList.map((image) {
-            return Builder(
-        builder: (BuildContext context) {
-          return Container(
-            
-            width: MediaQuery.of(context).size.width,
-            height:300,
-            margin: EdgeInsets.symmetric(horizontal: 5.0),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(26, 100, 98, 98),
-              borderRadius: BorderRadius.circular(15.0),
-              
-            ),
-             child: ClipRRect(
-            borderRadius: BorderRadius.circular(15.0), // Apply the same border radius here
-            child: image, // This is your Image.asset widget
-          ),
-          );
-        },
-            );
-          }).toList(),
-        ),
-        SizedBox(height: 5.0,),
-        Text("Products",style: GoogleFonts.inriaSans(color: Colors.black,fontSize: 28, fontWeight: FontWeight.bold),)
-             , 
-             
-             FutureBuilder<List<Product>>(
+
+              // carousel_sliderfor ADS
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 300.0,
+                  autoPlay: true,
+                  autoPlayInterval: Duration(seconds: 3),
+                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  pauseAutoPlayOnTouch: true,
+
+                  viewportFraction: 1.0,
+                ),
+                items:
+                    imgList.map((image) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 300,
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(26, 100, 98, 98),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                15.0,
+                              ), // Apply the same border radius here
+                              child: image, // This is your Image.asset widget
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+              ),
+              SizedBox(height: 5.0),
+              Text(
+                "Products",
+                style: GoogleFonts.inriaSans(
+                  color: Colors.black,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              FutureBuilder<List<Product>>(
                 future: _productsFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -260,16 +279,22 @@ class _HomePageState extends State<HomePage> {
                     // Assuming 2 items per row
                     final int numRows = (itemCount / 2).ceil();
                     // (width / 2) * 0.75 (for aspectRatio) + mainAxisSpacing
-                    final double itemHeight = (MediaQuery.of(context).size.width / 2) * 0.75;
-                    final double gridHeight = (numRows * itemHeight) + ((numRows - 1) * 16); // 16 is mainAxisSpacing
+                    final double itemHeight =
+                        (MediaQuery.of(context).size.width / 2) * 0.75;
+                    final double gridHeight =
+                        (numRows * itemHeight) +
+                        ((numRows - 1) * 16); // 16 is mainAxisSpacing
 
-                    return SizedBox( // Use SizedBox to give the GridView a bounded height
+                    return SizedBox(
+                      // Use SizedBox to give the GridView a bounded height
                       height: gridHeight, // Dynamically calculate height
                       child: GridView.builder(
                         padding: EdgeInsets.all(0),
                         itemCount: itemCount,
-                        shrinkWrap: true, // Crucial: GridView will only take up needed space
-                        physics: NeverScrollableScrollPhysics(), // Crucial: Disable GridView's own scrolling
+                        shrinkWrap:
+                            true, // Crucial: GridView will only take up needed space
+                        physics:
+                            NeverScrollableScrollPhysics(), // Crucial: Disable GridView's own scrolling
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 16,
@@ -285,13 +310,10 @@ class _HomePageState extends State<HomePage> {
                   }
                 },
               ),
-           
-           
             ],
           ),
         ),
       ),
-
 
       //bottom nav
       bottomNavigationBar: BottomNavigationBar(
@@ -309,7 +331,7 @@ class _HomePageState extends State<HomePage> {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => BookmarkPage()),
+                MaterialPageRoute(builder: (_) => ProductDetails()),
               );
               break;
             case 2:
@@ -334,78 +356,100 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
- Widget _buildProductGridItem(Product product) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Center(
-                child: product.imageUrl.isNotEmpty
-                    ? Image.network(
-                        product.imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Icon(Icons.broken_image, size: 50), // Placeholder for broken image
-                      )
-                    : Icon(Icons.image_not_supported, size: 50), // No image available
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              product.name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            SizedBox(height: 4),
-            // Text(
-            //   product.description,
-            //   style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-            //   maxLines: 2,
-            //   overflow: TextOverflow.ellipsis,
-            // ),
-            
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Text(
-                '\UGX ${product.price.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: const Color.fromARGB(255, 13, 35, 236)
+  Widget _buildProductGridItem(Product product) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => ProductDetails()),
+        );
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Center(
+                  child:
+                      product.imageUrl.isNotEmpty
+                          ? Image.network(
+                            product.imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) => Icon(
+                                  Icons.broken_image,
+                                  size: 50,
+                                ), // Placeholder for broken image
+                          )
+                          : Icon(
+                            Icons.image_not_supported,
+                            size: 50,
+                          ), // No image available
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 8),
+              Text(
+                product.name,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 4),
+
+              // Text(
+              //   product.description,
+              //   style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+              //   maxLines: 2,
+              //   overflow: TextOverflow.ellipsis,
+              // ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  '\UGX ${product.price.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: const Color.fromARGB(255, 13, 35, 236),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        
       ),
     );
   }
 
   // category class
   List imgList = [
-    Image.asset('assets/splash.png',  width: double.infinity,
+    Image.asset(
+      'assets/splash.png',
+      width: double.infinity,
       height: double.infinity,
-      fit: BoxFit.cover,),
-    Image.asset('assets/images (1).jpg',  width: double.infinity,
+      fit: BoxFit.cover,
+    ),
+    Image.asset(
+      'assets/images (1).jpg',
+      width: double.infinity,
       height: double.infinity,
-      fit: BoxFit.cover,),
-    Image.asset('assets/images (2).jpg',  width: double.infinity,
-      height: double.infinity, 
-      fit: BoxFit.cover,),
-    Image.asset('assets/images.jpg',  width: double.infinity,
+      fit: BoxFit.cover,
+    ),
+    Image.asset(
+      'assets/images (2).jpg',
+      width: double.infinity,
       height: double.infinity,
-      fit: BoxFit.cover),
-   
+      fit: BoxFit.cover,
+    ),
+    Image.asset(
+      'assets/images.jpg',
+      width: double.infinity,
+      height: double.infinity,
+      fit: BoxFit.cover,
+    ),
   ];
 
   Widget _buildCategoryTile(
@@ -459,5 +503,3 @@ class BookmarkPage extends StatelessWidget {
   }
 }
 
-
- 
