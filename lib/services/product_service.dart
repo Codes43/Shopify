@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shopify/models/product_model.dart';
 
 class ProductService {
-baseUrl = 'http://10.0.2.2:8000/products/';
+  //final String _baseUrl = 'http://10.0.2.2:8000/products/';
 
   final String _baseUrl = 'http://10.0.2.2:8000/products/';
 
@@ -19,7 +19,7 @@ baseUrl = 'http://10.0.2.2:8000/products/';
 
         // Map each JSON map to a Product object using the fromJson factory
         return productJson.map((json) => Product.fromJson(json)).toList();
-      } else{
+      } else {
         print('Failed to load products. Status Code: ${response.statusCode}');
         print('Response body: ${response.body}');
         throw Exception(

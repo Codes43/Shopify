@@ -9,13 +9,11 @@ import 'searchresultspage.dart';
 
 import 'package:shopify/models/product_model.dart'; // Import your Product model
 import 'package:shopify/services/product_service.dart';
-import 'searchresultspage.dart'; 
+import 'searchresultspage.dart';
 import 'package:shopify/services/auth_service.dart';
 import 'package:shopify/models/product_model.dart'; // Import your Product model
-import 'package:shopify/services/product_service.dart'; 
+import 'package:shopify/services/product_service.dart';
 import 'package:shopify/screens/profilescreen.dart';
-
-
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,9 +25,6 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   late Future<List<Product>> _productsFuture;
   final ProductService _productService = ProductService();
-
-
-
 
   @override
   void initState() {
@@ -47,11 +42,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     final authService = Provider.of<AuthService>(context);
     final isUserRegistered = authService.isAuthenticated;
-  
 
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -71,9 +63,6 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text(
                   'Shopify',
-
-
-
                   style: GoogleFonts.inriaSans(
                     color: Colors.white,
                     fontSize: 30,
@@ -83,7 +72,6 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   icon: Icon(Icons.shopping_cart, color: Colors.white),
                   onPressed: () => print("To Cart Page"),
-
                 ),
               ],
             ),
@@ -171,8 +159,7 @@ class _HomePageState extends State<HomePage> {
                         Icons.star,
                         'Popular',
                         isSelected: true,
-                        screenWidth: screenWi
-     
+                        screenWidth: screenWidth,
                       ),
                       _buildCategoryTile(
                         Icons.chair_alt,
@@ -295,7 +282,8 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => isUserRegistered ? ProfilePage() : LoginPage(),
+                  builder:
+                      (_) => isUserRegistered ? ProfilePage() : LoginPage(),
                 ),
               );
               break;
@@ -345,16 +333,14 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                   color: const Color.fromARGB(255, 13, 35, 236),
-
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
-
 
   Widget _buildCategoryTile(
     IconData icon,
@@ -443,5 +429,3 @@ class BookmarkPage extends StatelessWidget {
     );
   }
 }
-
-
