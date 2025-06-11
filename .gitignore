@@ -47,8 +47,3 @@ app.*.map.json
 
 Code Backup.txt
 ShopifyAPI/
-lib/services/product_service.dart
-lib/screens/profilescreen.dart
-lib/screens/searchresultspage.dart
-lib/screens/signuppage.dart
-macos/Flutter/GeneratedPluginRegistrant.swift
