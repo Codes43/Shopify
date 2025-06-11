@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'signuppage.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:shopify/screens/homepage.dart';
+import 'package:provider/provider.dart';
+//pages
+import 'signuppage.dart';
+
+import 'package:shopify/services/auth_service.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,78 +24,32 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
 
-  Future<void> _loginUser() async {
-    // Show loading indicator
-    setState(() {
-      isLoading = true;
-    });
+    Future<void> _loginUser() async {
+    if (!_formKey.currentState!.validate()) return;
 
-    // Get the values from the text controllers
-    final String email = _emailController.text;
-    final String password = _passwordController.text;
-
-    // Basic validation to ensure fields are not empty before sending
-    if (email.isEmpty || password.isEmpty) {
-      _showSnackBar('Please enter both email and password.');
-      setState(() {
-        isLoading = false;
-      });
-      return;
-    }
-
+    setState(() => isLoading = true);
+    
     try {
-      // Use http.post instead of just 'post'
-      // Use Uri.parse to convert the URL string into a Uri object
-      final response = await http.post(
-        Uri.parse('http://10.0.2.2:8000/signin/'), // Your API login URL
-        headers: <String, String>{
-          'Content-Type':
-              'application/json; charset=UTF-8', // Tell the API we're sending JSON
-        },
-        // Encode your data to JSON format
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
-        }),
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await authService.login(
+        _emailController.text.trim(),
+        _passwordController.text,
       );
-
-      if (response.statusCode == 200) {
-        // Login successful!
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        print('Login successful: $responseData');
-        _showSnackBar('Login successful!');
-
-        // Navigate to your home screen or dashboard
-        // Ensure HomePlaceholderPage exists or replace with your actual home screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => HomePage()),
-        );
-      } else {
-        // Login failed ( invalid credentials, 400 Bad Request)
-        final Map<String, dynamic> errorData = jsonDecode(response.body);
-        String errorMessage =
-            errorData['error'] ?? 'An unknown error occurred.';
-        _showSnackBar('Login failed: $errorMessage');
-        print('Login failed: ${response.statusCode} - ${response.body}');
-      }
+      
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => HomePage()),
+      );
     } catch (e) {
-      // Handle network errors (e.g., no internet connection, API not reachable)
-      _showSnackBar('Network error: ${e.toString()}');
-      print('Error during login: $e');
+      _showSnackBar('Login failed: ${e.toString()}');
     } finally {
-      // Hide loading indicator regardless of success or failure
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
     }
   }
-
-  // Helper function to show a SnackBar
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override

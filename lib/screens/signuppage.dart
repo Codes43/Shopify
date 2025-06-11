@@ -20,7 +20,7 @@ class _SignUpPageState extends State<SignupPage> {
   bool isHoveringSignin = false;
 
   bool _obscurePassword = true;
-  bool _obscureConfrimPassword = true;
+  final bool _obscureConfrimPassword = true;
 
   //API
   bool isLoading = false;
