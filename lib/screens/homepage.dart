@@ -73,7 +73,6 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   icon: Icon(Icons.shopping_cart, color: Colors.white),
                   onPressed: () => print("To Cart Page"),
-
                 ),
               ],
             ),
@@ -304,7 +303,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildProductGridItem(Product product) {
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -338,28 +336,28 @@ class _HomePageState extends State<HomePage> {
                             size: 50,
                           ), // No image available
                 ),
- 
               ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              product.name,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Text(
-                '\UGX ${product.price.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: const Color.fromARGB(255, 13, 35, 236),
+
+              SizedBox(height: 8),
+              Text(
+                product.name,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  '\UGX ${product.price.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: const Color.fromARGB(255, 13, 35, 236),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
