@@ -5,7 +5,8 @@ import 'package:shopify/models/product_model.dart';
 class ProductService {
   //final String _baseUrl = 'http://10.0.2.2:8000/products/';
 
-  final String _baseUrl = 'http://127.0.0.1:8000/products/';
+  final String _baseUrl = 'http://10.0.2.2:8000/products/';
+
   Future<List<Product>> getProducts() async {
     try {
       final response = await http.get(Uri.parse(_baseUrl));
@@ -18,7 +19,7 @@ class ProductService {
 
         // Map each JSON map to a Product object using the fromJson factory
         return productJson.map((json) => Product.fromJson(json)).toList();
-      } else{
+      } else {
         print('Failed to load products. Status Code: ${response.statusCode}');
         print('Response body: ${response.body}');
         throw Exception(
