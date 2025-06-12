@@ -9,7 +9,11 @@ class SearchResultsPage extends StatefulWidget {
   final String searchTerm;
   final bool isUserRegistered;
 
-  const SearchResultsPage({super.key, required this.searchTerm, required this.isUserRegistered});
+  const SearchResultsPage({
+    super.key,
+    required this.searchTerm,
+    required this.isUserRegistered,
+  });
 
   @override
   _SearchResultsPageState createState() => _SearchResultsPageState();
@@ -17,9 +21,8 @@ class SearchResultsPage extends StatefulWidget {
 
 class _SearchResultsPageState extends State<SearchResultsPage> {
   bool isLoading = true;
-   List<Product> searchResults = [];
+  List<Product> searchResults = [];
 
-  //am calling the productService to handle the API
   String errorMessage = '';
   final ProductSearchService _productSearchService = ProductSearchService();
 
@@ -30,10 +33,11 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   }
 
   Future<void> _fetchSearchResults() async {
-      try {
-      // Call the API service to search products
-      final results = await _productSearchService.searchProducts(widget.searchTerm);
-      
+    try {
+      final results = await _productSearchService.searchProducts(
+        widget.searchTerm,
+      );
+
       setState(() {
         searchResults = results;
         isLoading = false;
@@ -46,8 +50,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
     }
   }
 
-
-    Widget buildProductCard(Product product) {
+  Widget buildProductCard(Product product) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -61,18 +64,20 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: product.imageUrl.isNotEmpty
-                ? Image.network(
-                    product.imageUrl,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) => 
-                      Icon(Icons.broken_image, size: 50),
-                  )
-                : Icon(Icons.image_not_supported, size: 50),
+            child:
+                product.imageUrl.isNotEmpty
+                    ? Image.network(
+                      product.imageUrl,
+                      fit: BoxFit.contain,
+                      errorBuilder:
+                          (context, error, stackTrace) =>
+                              Icon(Icons.broken_image, size: 50),
+                    )
+                    : Icon(Icons.image_not_supported, size: 50),
           ),
           SizedBox(height: 8),
           Text(
-            '\$${product.price.toStringAsFixed(2)}', // Format price
+            '\$${product.price.toStringAsFixed(2)}',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           SizedBox(height: 4),
@@ -90,83 +95,88 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            // Top Bar
             Container(
-              height: 91,
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+              height: 56,
+              margin: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
               child: Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.chevron_left, size: 28),
+                    icon: Icon(
+                      Icons.chevron_left,
+                      size: 22,
+                      color: Colors.white,
+                    ),
                     onPressed: () => Navigator.pop(context),
+                    padding: EdgeInsets.zero,
+                    constraints: BoxConstraints(),
                   ),
-                  SizedBox(width: screenWidth * 0.02),
+                  SizedBox(width: 6),
+                  Icon(Icons.search, color: Colors.white70, size: 20),
+                  SizedBox(width: 6),
                   Expanded(
-                    child: Container(
-                      height: 40,
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(8),
+                    child: Text(
+                      widget.searchTerm,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
                       ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.search, color: Colors.grey),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              widget.searchTerm,
-                              style: TextStyle(fontSize: 16),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
             ),
 
-            // Product Grid Area
-          Expanded(
-              child: isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : errorMessage.isNotEmpty
+            Expanded(
+              child:
+                  isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : errorMessage.isNotEmpty
                       ? Center(child: Text(errorMessage))
                       : searchResults.isEmpty
-                          ? Center(
-                              child: Text(
-                                'No results found for "${widget.searchTerm}"',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            )
-                          : GridView.builder(
-                              padding: EdgeInsets.all(16),
-                              itemCount: searchResults.length,
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 16,
-                                mainAxisSpacing: 16,
-                                childAspectRatio: 3 / 4,
-                              ),
-                              itemBuilder: (context, index) {
-                                final product = searchResults[index];
-                                return buildProductCard(product);
-                              },
-                            ),
+                      ? Center(
+                        child: Text(
+                          'No results found for "${widget.searchTerm}"',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      )
+                      : GridView.builder(
+                        padding: EdgeInsets.all(16),
+                        itemCount: searchResults.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 3 / 4,
+                        ),
+                        itemBuilder: (context, index) {
+                          final product = searchResults[index];
+                          return buildProductCard(product);
+                        },
+                      ),
             ),
           ],
         ),
       ),
 
-      // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         selectedItemColor: Colors.black,
