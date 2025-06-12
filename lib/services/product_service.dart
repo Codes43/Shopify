@@ -5,7 +5,7 @@ import 'package:shopify/models/product_model.dart';
 class ProductService {
   //final String _baseUrl = 'http://10.0.2.2:8000/products/';
 
-  final String _baseUrl = 'http://127.0.0.1:8000/products/';
+  final String _baseUrl = 'http://10.0.2.2:8000/products/';
   Future<List<Product>> getProducts() async {
     try {
       final response = await http.get(Uri.parse(_baseUrl));
@@ -29,6 +29,29 @@ class ProductService {
       } else {
         throw Exception('An unexpected error occurred while fetching products.');
       }
+    }
+  }
+}
+
+
+class ProductSearchService {
+  final String baseUrl = 'http://10.0.2.2:8000'; 
+
+  Future<List<Product>> searchProducts(String query) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/products/search/?search=$query'),
+      );
+
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((json) => Product.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load products: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to connect to the server: $e');
     }
   }
 }
