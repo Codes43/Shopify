@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shopify/screens/productdetails.dart';
 import 'loginpage.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
     _productsFuture =
         _productService.getProducts(); // Initialize the future in initState
   }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -41,7 +42,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
     final isUserRegistered = authService.isAuthenticated;
-  
 
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -259,7 +259,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
 
-
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         selectedItemColor: Colors.black,
@@ -306,7 +305,7 @@ class _HomePageState extends State<HomePage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => BookmarkPage()),
+          MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
         );
       },
       child: Card(
@@ -358,7 +357,6 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        
       ),
     );
   }
