@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shopify/screens/homepage.dart';
 import 'package:provider/provider.dart';
-//pages
 import 'signuppage.dart';
-
 import 'package:shopify/services/auth_service.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,18 +21,18 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
 
-    Future<void> _loginUser() async {
+  Future<void> _loginUser() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => isLoading = true);
-    
+
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
       await authService.login(
         _emailController.text.trim(),
         _passwordController.text,
       );
-      
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => HomePage()),
@@ -46,10 +43,11 @@ class _LoginPageState extends State<LoginPage> {
       setState(() => isLoading = false);
     }
   }
+
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -85,60 +83,79 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth > 800 ? screenWidth * 0.25 : 0,
                   ),
-                  validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        !value.contains('@')) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
+                  child: TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null ||
+                          value.isEmpty ||
+                          !value.contains('@')) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
                 SizedBox(height: 16),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth > 800 ? screenWidth * 0.25 : 0,
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty || value.length < 6) {
-                      return 'Password must be at least 6 characters long';
-                    }
-                    return null;
-                  },
+                  child: TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty || value.length < 6) {
+                        return 'Password must be at least 6 characters long';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: MouseRegion(
-                      onEnter: (_) => setState(() => isHoveringForgot = true),
-                      onExit: (_) => setState(() => isHoveringForgot = false),
-                      child: GestureDetector(
-                        onTap: () {
-                          print('Forgot password?');
-                        },
-                        child: Text(
-                          'Forgot password?',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 12,
-                            decoration:
-                                isHoveringForgot
-                                    ? TextDecoration.underline
-                                    : null,
+                Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: screenWidth > 800 ? 465 : double.infinity,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: MouseRegion(
+                          onEnter:
+                              (_) => setState(() => isHoveringForgot = true),
+                          onExit:
+                              (_) => setState(() => isHoveringForgot = false),
+                          child: GestureDetector(
+                            onTap: () {
+                              print('Forgot password?');
+                            },
+                            child: Text(
+                              'Forgot password?',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                                decoration:
+                                    isHoveringForgot
+                                        ? TextDecoration.underline
+                                        : null,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -146,25 +163,29 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth > 800 ? screenWidth * 0.35 : 0,
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _loginUser();
+                          print('Login pressed');
+                        }
+                      },
+                      child: Text('Login'),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _loginUser();
-                        print('Login pressed');
-                      }
-                    },
-
-                    child: Text('Login'),
                   ),
                 ),
                 SizedBox(height: 24),
