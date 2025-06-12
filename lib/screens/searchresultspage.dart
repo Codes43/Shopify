@@ -22,22 +22,32 @@ class SearchResultsPage extends StatefulWidget {
 class _SearchResultsPageState extends State<SearchResultsPage> {
   bool isLoading = true;
   List<Product> searchResults = [];
-
   String errorMessage = '';
   final ProductSearchService _productSearchService = ProductSearchService();
+  late TextEditingController _searchController;
 
   @override
   void initState() {
     super.initState();
+    _searchController = TextEditingController(text: widget.searchTerm);
     _fetchSearchResults();
   }
 
-  Future<void> _fetchSearchResults() async {
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchSearchResults([String? newTerm]) async {
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
     try {
       final results = await _productSearchService.searchProducts(
-        widget.searchTerm,
+        newTerm ?? widget.searchTerm,
       );
-
       setState(() {
         searchResults = results;
         isLoading = false;
@@ -127,19 +137,38 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                     constraints: BoxConstraints(),
                   ),
                   SizedBox(width: 6),
-                  Icon(Icons.search, color: Colors.white70, size: 20),
-                  SizedBox(width: 6),
                   Expanded(
-                    child: Text(
-                      widget.searchTerm,
+                    child: TextField(
+                      controller: _searchController,
                       style: TextStyle(
-                        fontSize: 16,
                         color: Colors.white,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
                       ),
-                      overflow: TextOverflow.ellipsis,
+                      cursorColor: Colors.white,
+                      decoration: InputDecoration(
+                        hintText: 'Search products...',
+                        hintStyle: TextStyle(color: Colors.white54),
+                        border: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                      ),
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (value) {
+                        if (value.trim().isNotEmpty) {
+                          _fetchSearchResults(value.trim());
+                        }
+                      },
                     ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.search, color: Colors.white70, size: 20),
+                    onPressed: () {
+                      final value = _searchController.text.trim();
+                      if (value.isNotEmpty) {
+                        _fetchSearchResults(value);
+                      }
+                    },
                   ),
                 ],
               ),
