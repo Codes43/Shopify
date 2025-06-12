@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopify/models/product_model.dart';
+import 'package:shopify/screens/ShoppingCartScreen.dart';
 
 // Import your Product model
 
@@ -36,18 +37,29 @@ class _ProductPageState extends State<ProductDetails> {
     }
   }
 
-  void addToCart() {
+  void addToCart(Product product, BuildContext context) {
     setState(() {
       isAddedToCart = true;
     });
-
     // Show a confirmation message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Product added to cart!'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    // Save product to storage
+    Product.addProdToCart(product)
+        .then((_) {
+          // Navigate to cart screen
+          Navigator.push(
+            context, // Use the provided context
+            MaterialPageRoute(
+              builder: (context) => const ShoppingCartScreen(),
+              fullscreenDialog: true, // Optional: makes it slide up on iOS
+            ),
+          );
+        })
+        .catchError((error) {
+          print('Error adding to cart: $error');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to add item to cart')),
+          );
+        });
   }
 
   @override
@@ -158,7 +170,7 @@ class _ProductPageState extends State<ProductDetails> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: isAddedToCart ? null : addToCart,
+                  onPressed: () => addToCart(widget.product, context),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     backgroundColor: Colors.black,

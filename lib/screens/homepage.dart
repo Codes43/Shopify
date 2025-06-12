@@ -1,6 +1,6 @@
-import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shopify/screens/ShoppingCartScreen.dart';
 import 'package:shopify/screens/productdetails.dart';
 import 'loginpage.dart';
 import 'package:provider/provider.dart';
@@ -9,13 +9,13 @@ import 'searchresultspage.dart';
 
 import 'package:shopify/models/product_model.dart'; // Import your Product model
 import 'package:shopify/services/product_service.dart';
-import 'searchresultspage.dart';
 import 'package:shopify/services/auth_service.dart';
-import 'package:shopify/models/product_model.dart'; // Import your Product model
-import 'package:shopify/services/product_service.dart';
+// Import your Product model
 import 'package:shopify/screens/profilescreen.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -36,6 +36,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void toCart() {
     _searchController.dispose();
     super.dispose();
   }
@@ -72,8 +77,16 @@ class _HomePageState extends State<HomePage> {
 
                 IconButton(
                   icon: Icon(Icons.shopping_cart, color: Colors.white),
-                  onPressed: () => print("To Cart Page"),
-
+                  onPressed: () {
+                    Navigator.push(
+                      context, // Use the provided context
+                      MaterialPageRoute(
+                        builder: (context) => const ShoppingCartScreen(),
+                        fullscreenDialog:
+                            true, // Optional: makes it slide up on iOS
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -304,7 +317,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildProductGridItem(Product product) {
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -338,28 +350,28 @@ class _HomePageState extends State<HomePage> {
                             size: 50,
                           ), // No image available
                 ),
- 
               ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              product.name,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Text(
-                '\UGX ${product.price.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: const Color.fromARGB(255, 13, 35, 236),
+
+              SizedBox(height: 8),
+              Text(
+                product.name,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  'UGX ${product.price.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: const Color.fromARGB(255, 13, 35, 236),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -444,6 +456,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 class BookmarkPage extends StatelessWidget {
+  const BookmarkPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

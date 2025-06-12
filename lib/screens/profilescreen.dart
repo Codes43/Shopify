@@ -5,7 +5,6 @@ import 'package:shopify/services/auth_service.dart';
 import 'package:shopify/screens/loginpage.dart';
 
 class ProfilePage extends StatelessWidget {
-
   const ProfilePage({super.key});
 
   @override
@@ -37,9 +36,10 @@ class ProfilePage extends StatelessWidget {
               // Username
               CircleAvatar(
                 radius: 80,
-                backgroundImage: user?['avatar'] != null 
-                  ? NetworkImage(user!['avatar'])
-                  : AssetImage("assets/user.png") as ImageProvider,
+                backgroundImage:
+                    user?['avatar'] != null
+                        ? NetworkImage(user!['avatar'])
+                        : AssetImage("assets/user.png") as ImageProvider,
               ),
               const SizedBox(height: 20),
               Text(
@@ -52,13 +52,9 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
 
-
               Text(
                 user?['email'] ?? 'No email',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey[700],
-                ),
+                style: TextStyle(fontSize: 18, color: Colors.grey[700]),
               ),
               const SizedBox(height: 40),
 
@@ -71,16 +67,18 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
 
-
                 onPressed: () async {
-                  final authService = Provider.of<AuthService>(context, listen: false);
+                  final authService = Provider.of<AuthService>(
+                    context,
+                    listen: false,
+                  );
                   await authService.logout();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (_) => LoginPage()),
                   );
                 },
-                child: Container(
+                child: SizedBox(
                   width: 100,
 
                   child: Row(
@@ -89,10 +87,9 @@ class ProfilePage extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(Icons.logout),
                       ),
-        Text('Logout', style: TextStyle()),
+                      Text('Logout', style: TextStyle()),
 
                       Text('Logout'),
-
                     ],
                   ),
                 ),
