@@ -5,6 +5,8 @@ import 'package:shopify/services/auth_service.dart';
 import 'package:shopify/screens/loginpage.dart';
 
 class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
@@ -63,7 +65,7 @@ class ProfilePage extends StatelessWidget {
                     MaterialPageRoute(builder: (_) => LoginPage()),
                   );
                 },
-                child: Container(
+                child: SizedBox(
                   width: 100,
                   child: Row(
                     children: [
