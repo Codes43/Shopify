@@ -49,7 +49,7 @@ class _SignUpPageState extends State<SignupPage> {
       // Use http.post instead of just 'post'
       // Use Uri.parse to convert the URL string into a Uri object
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8000/signup/'), // Your API login URL
+        Uri.parse('https://shopifyapi-tx6d.onrender.com/signup/'), // Your API login URL
         headers: <String, String>{
           'Content-Type':
               'application/json; charset=UTF-8', // Tell the API we're sending JSON
@@ -75,14 +75,14 @@ class _SignUpPageState extends State<SignupPage> {
         );
       } else {
         // Login failed ( invalid credentials, 400 Bad Request)
-        final Map<String, dynamic> errorData = jsonDecode(response.body);
-        String errorMessage = errorData['error'] ?? '';
-        _showSnackBar('       Email Already exists $errorMessage');
+        jsonDecode(response.body);
+        
+        _showSnackBar('       Email Already exists');
         print('Registration failed: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       // Handle network errors (e.g., no internet connection, API not reachable)
-      _showSnackBar('Network error: ${e.toString()}');
+      _showSnackBar('Please check your connection');
       print('Error during Registration: $e');
     } finally {
       // Hide loading indicator regardless of success or failure

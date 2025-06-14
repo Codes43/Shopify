@@ -38,7 +38,8 @@ class AuthService with ChangeNotifier {
   
   try {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8000/signin/'), 
+      
+      Uri.parse('https://shopifyapi-tx6d.onrender.com/signin'), 
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'email': email,
