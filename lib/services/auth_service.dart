@@ -33,7 +33,51 @@ class AuthService with ChangeNotifier {
   }
 
   Future<void> login(String email, String password) async {
+<<<<<<< HEAD
     _isLoading = true;
+=======
+  _isLoading = true;
+  notifyListeners();
+  
+  try {
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8000/signin/'), 
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    final responseData = jsonDecode(response.body);
+    
+    if (response.statusCode == 200) {
+      // Updated to match your actual response structure
+      final tokens = responseData['tokens'] as Map<String, dynamic>;
+      final accessToken = tokens['access'] as String;
+      final refreshToken = tokens['refresh'] as String;
+      final user = responseData['user'] as Map<String, dynamic>;
+      
+      if (accessToken.isEmpty || refreshToken.isEmpty) {
+        throw Exception('Tokens are empty');
+      }
+      
+      await _saveAuthData(
+        accessToken,
+        refreshToken,
+        user,
+      );
+    } else {
+      final errorMsg = responseData['message'] ?? 
+          'Login failed with status ${response.statusCode}';
+      throw Exception(errorMsg);
+    }
+  } catch (e) {
+    await _clearStorage();
+    rethrow;
+  } finally {
+    _isLoading = false;
+>>>>>>> 191ad356187dfc83e180048b8edbb0fefe91abf7
     notifyListeners();
 
     try {

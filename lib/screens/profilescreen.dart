@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopify/services/auth_service.dart';
 import 'package:shopify/screens/loginpage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
@@ -12,9 +15,11 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text('Profile',style: GoogleFonts.inriaSans(fontSize: 28, fontWeight: FontWeight.bold)),
+        centerTitle:true,
         backgroundColor: Colors.white,
         elevation: 0,
+
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Center(
@@ -32,9 +37,9 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                user?['username'] ?? 'Guest',
+                user?['username'] ?? 'Shopifyuser${user?['id']!}',
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),

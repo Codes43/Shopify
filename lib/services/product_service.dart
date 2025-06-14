@@ -5,7 +5,11 @@ import 'package:shopify/models/product_model.dart';
 class ProductService {
   final String _baseUrl = 'http://127.0.0.1:8000/products/';
 
+<<<<<<< HEAD
   //final String _baseUrl = 'http://10.0.2.2:8000/products/';
+=======
+  final String _baseUrl = 'http://127.0.0.1:8000/products/';
+>>>>>>> 191ad356187dfc83e180048b8edbb0fefe91abf7
   Future<List<Product>> getProducts() async {
     try {
       final response = await http.get(Uri.parse(_baseUrl));
@@ -36,6 +40,7 @@ class ProductService {
         throw Exception(
           'An unexpected error occurred while fetching products.',
         );
+<<<<<<< HEAD
       }
     }
   }
@@ -75,13 +80,19 @@ class ProductService {
         throw Exception(
           'An unexpected error occurred while fetching products.',
         );
+=======
+>>>>>>> 191ad356187dfc83e180048b8edbb0fefe91abf7
       }
     }
   }
 }
 
 class ProductSearchService {
+<<<<<<< HEAD
   final String baseUrl = 'http://10.0.2.2:8000';
+=======
+  final String baseUrl = 'http://127.0.0.1:8000';
+>>>>>>> 191ad356187dfc83e180048b8edbb0fefe91abf7
 
   Future<List<Product>> searchProducts(String query) async {
     try {
