@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shopify/models/product_model.dart';
 import 'package:shopify/screens/ShoppingCartScreen.dart';
 
-// Import your Product model
-
 class ProductDetails extends StatefulWidget {
   final Product product;
   const ProductDetails({super.key, required this.product});
@@ -37,155 +35,153 @@ class _ProductPageState extends State<ProductDetails> {
     }
   }
 
-  void addToCart(Product product, BuildContext context) {
-    setState(() {
-      isAddedToCart = true;
-    });
-    // Show a confirmation message
-    // Save product to storage
-    Product.addProdToCart(product)
-        .then((_) {
-          // Navigate to cart screen
-          Navigator.push(
-            context, // Use the provided context
-            MaterialPageRoute(
-              builder: (context) => const ShoppingCartScreen(),
-              fullscreenDialog: true, // Optional: makes it slide up on iOS
-            ),
-          );
-        })
-        .catchError((error) {
-          print('Error adding to cart: $error');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to add item to cart')),
-          );
-        });
+  Future<void> addToCart(Product product, BuildContext context) async {
+    try {
+      await Product.addProdToCart(product);
+      setState(() {
+        isAddedToCart = true;
+      });
+
+      // Show success message
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Item added to cart')));
+
+      // Optional: Navigate to cart screen
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => const ShoppingCartScreen(),
+      //     fullscreenDialog: true,
+      //   ),
+      // );
+    } catch (error) {
+      print('Error adding to cart: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to add item to cart')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         leading: IconButton(
-          icon: Icon(Icons.chevron_left),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: const Icon(Icons.chevron_left),
+          color: Colors.white,
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-
-          children: [
-            const SizedBox(height: 24),
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 24),
+              SizedBox(
+                height: 300, // Fixed height to prevent unbounded constraints
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child:
+                      widget.product.imageUrl.isNotEmpty
+                          ? Image.network(
+                            widget.product.imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) =>
+                                    const Icon(Icons.broken_image, size: 50),
+                          )
+                          : const Icon(Icons.image_not_supported, size: 50),
+                ),
               ),
-              child: Stack(
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Center(
-                    child:
-                        widget.product.imageUrl.isNotEmpty
-                            ? Image.network(
-                              widget.product.imageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder:
-                                  (context, error, stackTrace) => Icon(
-                                    Icons.broken_image,
-                                    size: 50,
-                                  ), // Placeholder for broken image
-                            )
-                            : Icon(Icons.image_not_supported, size: 50),
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.black54,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Text(
-                        'NEW',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  Expanded(
+                    child: Text(
+                      widget.product.name,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
                       ),
                     ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      isFavorite ? Icons.bookmark : Icons.bookmark_border,
+                      color: isFavorite ? Colors.red : null,
+                    ),
+                    onPressed: toggleFavorite,
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.product.name,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+              const SizedBox(height: 16),
+              Text(
+                'UGX ${widget.product.price}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                widget.product.description,
+                style: const TextStyle(fontSize: 16, height: 1.5),
+              ),
+              const SizedBox(height: 24),
+
+              // Quantity Selector
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: decreaseQuantity,
+                  ),
+                  Text(
+                    quantity.toString(),
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: increaseQuantity,
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 100),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed:
+                        isAddedToCart
+                            ? null
+                            : () => addToCart(widget.product, context),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      isAddedToCart ? 'Added to Cart' : 'Add to cart',
+                      style: const TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: Icon(
-                    isFavorite ? Icons.bookmark : Icons.bookmark_border,
-                    color: isFavorite ? Colors.red : null,
-                  ),
-                  onPressed: toggleFavorite,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'UGX  ${widget.product.price}',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
               ),
-            ),
-
-            const SizedBox(height: 24),
-            Text(
-              widget.product.description,
-              style: TextStyle(fontSize: 16, height: 1.5),
-            ),
-
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 100,
-              ), // Equal left and right padding
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => addToCart(widget.product, context),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    isAddedToCart ? 'Added to Cart' : 'Add to cart',
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ],
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );

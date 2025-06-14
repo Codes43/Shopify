@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'loginpage.dart';
 import 'homepage.dart';
 import 'profilescreen.dart';
+import 'package:shopify/models/product_model.dart';
+import 'package:shopify/services/product_service.dart';
 
 class SearchResultsPage extends StatefulWidget {
   final String searchTerm;
   final bool isUserRegistered;
 
-  const SearchResultsPage({
-    super.key,
-    required this.searchTerm,
-    required this.isUserRegistered,
-  });
+  const SearchResultsPage({super.key, required this.searchTerm, required this.isUserRegistered});
 
   @override
   _SearchResultsPageState createState() => _SearchResultsPageState();
@@ -19,15 +17,11 @@ class SearchResultsPage extends StatefulWidget {
 
 class _SearchResultsPageState extends State<SearchResultsPage> {
   bool isLoading = true;
-  List<String> searchResults = [];
+   List<Product> searchResults = [];
 
-  final List<String> imageUrls = [
-    'https://i.imgur.com/L68FtMA.jpg',
-    'https://i.imgur.com/YKLRmF4.jpg',
-    'https://i.imgur.com/w1UJZ2E.jpg',
-    'https://i.imgur.com/xXGxO1J.jpg',
-    'https://i.imgur.com/7LqXx4P.jpg',
-  ];
+  //am calling the productService to handle the API
+  String errorMessage = '';
+  final ProductSearchService _productSearchService = ProductSearchService();
 
   @override
   void initState() {
@@ -36,20 +30,24 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   }
 
   Future<void> _fetchSearchResults() async {
-    await Future.delayed(Duration(seconds: 2));
-
-    List<String> mockData = List.generate(
-      10,
-      (index) => '${widget.searchTerm} Item ${index + 1}',
-    );
-
-    setState(() {
-      searchResults = mockData;
-      isLoading = false;
-    });
+      try {
+      // Call the API service to search products
+      final results = await _productSearchService.searchProducts(widget.searchTerm);
+      
+      setState(() {
+        searchResults = results;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        errorMessage = 'Failed to load results: $e';
+      });
+    }
   }
 
-  Widget buildProductCard(String title, String price, String imageUrl) {
+
+    Widget buildProductCard(Product product) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -62,17 +60,28 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(child: Image.network(imageUrl, fit: BoxFit.contain)),
+          Expanded(
+            child: product.imageUrl.isNotEmpty
+                ? Image.network(
+                    product.imageUrl,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => 
+                      Icon(Icons.broken_image, size: 50),
+                  )
+                : Icon(Icons.image_not_supported, size: 50),
+          ),
           SizedBox(height: 8),
           Text(
-            price,
+            '\$${product.price.toStringAsFixed(2)}', // Format price
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           SizedBox(height: 4),
           Text(
-            title,
+            product.name,
             style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -126,35 +135,32 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
             ),
 
             // Product Grid Area
-            Expanded(
-              child:
-                  isLoading
-                      ? Center(child: CircularProgressIndicator())
+          Expanded(
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : errorMessage.isNotEmpty
+                      ? Center(child: Text(errorMessage))
                       : searchResults.isEmpty
-                      ? Center(
-                        child: Text(
-                          'No results found for "${widget.searchTerm}"',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      )
-                      : GridView.builder(
-                        padding: EdgeInsets.all(16),
-                        itemCount: searchResults.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 3 / 4,
-                        ),
-                        itemBuilder: (context, index) {
-                          final title = searchResults[index];
-                          final price =
-                              '\$${(40 + index * 3.5).toStringAsFixed(2)}';
-                          final imageUrl = imageUrls[index % imageUrls.length];
-
-                          return buildProductCard(title, price, imageUrl);
-                        },
-                      ),
+                          ? Center(
+                              child: Text(
+                                'No results found for "${widget.searchTerm}"',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            )
+                          : GridView.builder(
+                              padding: EdgeInsets.all(16),
+                              itemCount: searchResults.length,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                                childAspectRatio: 3 / 4,
+                              ),
+                              itemBuilder: (context, index) {
+                                final product = searchResults[index];
+                                return buildProductCard(product);
+                              },
+                            ),
             ),
           ],
         ),

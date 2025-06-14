@@ -5,8 +5,6 @@ import 'package:shopify/services/auth_service.dart';
 import 'package:shopify/screens/loginpage.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
@@ -25,15 +23,6 @@ class ProfilePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // User Profile Image
-              Image.asset(
-                "assets/user.png",
-                fit: BoxFit.cover,
-                width: 160,
-                height: 160,
-              ),
-
-              // Username
               CircleAvatar(
                 radius: 80,
                 backgroundImage:
@@ -51,13 +40,11 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-
               Text(
                 user?['email'] ?? 'No email',
                 style: TextStyle(fontSize: 18, color: Colors.grey[700]),
               ),
               const SizedBox(height: 40),
-
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
@@ -66,7 +53,6 @@ class ProfilePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-
                 onPressed: () async {
                   final authService = Provider.of<AuthService>(
                     context,
@@ -80,15 +66,12 @@ class ProfilePage extends StatelessWidget {
                 },
                 child: SizedBox(
                   width: 100,
-
                   child: Row(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(Icons.logout),
                       ),
-                      Text('Logout', style: TextStyle()),
-
                       Text('Logout'),
                     ],
                   ),

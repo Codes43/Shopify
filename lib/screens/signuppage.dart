@@ -20,7 +20,7 @@ class _SignUpPageState extends State<SignupPage> {
   bool isHoveringSignin = false;
 
   bool _obscurePassword = true;
-  final bool _obscureConfrimPassword = true;
+  bool _obscureConfrimPassword = true;
 
   //API
   bool isLoading = false;
@@ -49,7 +49,7 @@ class _SignUpPageState extends State<SignupPage> {
       // Use http.post instead of just 'post'
       // Use Uri.parse to convert the URL string into a Uri object
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8000/signup/'), // Your API login URL
+        Uri.parse('http://127.0.0.1:8000/signup/'), // Your API login URL
         headers: <String, String>{
           'Content-Type':
               'application/json; charset=UTF-8', // Tell the API we're sending JSON
