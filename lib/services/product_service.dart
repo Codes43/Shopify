@@ -3,9 +3,13 @@ import 'package:http/http.dart' as http;
 import 'package:shopify/models/product_model.dart';
 
 class ProductService {
-  //final String _baseUrl = 'http://10.0.2.2:8000/products/';
-
   final String _baseUrl = 'http://127.0.0.1:8000/products/';
+
+<<<<<<< HEAD
+  //final String _baseUrl = 'http://10.0.2.2:8000/products/';
+=======
+  final String _baseUrl = 'http://127.0.0.1:8000/products/';
+>>>>>>> 191ad356187dfc83e180048b8edbb0fefe91abf7
   Future<List<Product>> getProducts() async {
     try {
       final response = await http.get(Uri.parse(_baseUrl));
@@ -36,13 +40,59 @@ class ProductService {
         throw Exception(
           'An unexpected error occurred while fetching products.',
         );
+<<<<<<< HEAD
+      }
+    }
+  }
+
+  Future<Product> getProduct(pId) async {
+    try {
+      final response = await http.get(Uri.parse(_baseUrl + pId));
+
+      if (response.statusCode == 200) {
+        print('API Response Status: ${response.statusCode}');
+        print('API Response Body Length: ${response.body.length} bytes');
+
+        Product productJson = json.decode(response.body);
+
+        // Map each JSON map to a Product object using the fromJson factory
+        return productJson;
+      } else {
+        print('Failed to load product. Status Code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception(
+          'Failed to load products: Server returned status ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      if (e is http.ClientException) {
+        print('Error fetching products (Network Issue): $e');
+        throw Exception(
+          'Network error: Could not connect to the server. Is your API running and URL correct?',
+        );
+      } else if (e is FormatException) {
+        print('Error fetching products (JSON Parsing Issue): $e');
+        throw Exception(
+          'Failed to parse data. The API returned invalid JSON or its structure doesn\'t match the Product model.',
+        );
+      } else {
+        print('Error fetching products (Generic): $e');
+        throw Exception(
+          'An unexpected error occurred while fetching products.',
+        );
+=======
+>>>>>>> 191ad356187dfc83e180048b8edbb0fefe91abf7
       }
     }
   }
 }
 
 class ProductSearchService {
+<<<<<<< HEAD
+  final String baseUrl = 'http://10.0.2.2:8000';
+=======
   final String baseUrl = 'http://127.0.0.1:8000';
+>>>>>>> 191ad356187dfc83e180048b8edbb0fefe91abf7
 
   Future<List<Product>> searchProducts(String query) async {
     try {
