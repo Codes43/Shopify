@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopify/screens/productdetails.dart';
 import 'loginpage.dart';
 import 'homepage.dart';
 import 'profilescreen.dart';
@@ -61,7 +62,13 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   }
 
   Widget buildProductCard(Product product) {
-    return  Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
+        );
+      }, child:  Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -97,7 +104,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   @override
