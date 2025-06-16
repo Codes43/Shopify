@@ -1,9 +1,8 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shopify/models/product_model.dart';
+import 'package:provider/provider.dart';
+import 'package:shopify/provider/cartprovider.dart';
+
 
 class ShoppingCartScreen extends StatefulWidget {
   const ShoppingCartScreen({super.key});
@@ -13,7 +12,6 @@ class ShoppingCartScreen extends StatefulWidget {
 }
 
 class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
-  List<Product> cartItems = [];
   double subtotal = 0.0;
 
   @override
@@ -23,28 +21,18 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
   }
 
   Future<void> _loadCartItems() async {
-    final items = await Product.loadAllProducts();
-
-    try {
-      final response = await http.get(Uri.parse(items[0].imageUrl));
-      // Should be image/*
-      print(response.statusCode); // Should be 200
-    } catch (e) {
-      print('Error fetching image: $e');
-    }
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    await cartProvider.loadCartItems();
+    
     setState(() {
-      cartItems = items;
-      subtotal = items.fold(0, (sum, item) => sum + item.price);
+      subtotal = cartProvider.cartItems.fold(0, (sum, item) => sum + item.price);
     });
-  }
-
-  Future<void> _removeItem(int productId) async {
-    await Product.deleteFromCart(productId);
-    _loadCartItems(); // Refresh the list
   }
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+    final cartItems = cartProvider.cartItems;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -132,9 +120,12 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                               ],
                             ),
                           ),
-                          IconButton(
+                            IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _removeItem(item.id),
+                            onPressed: () async {
+                              await cartProvider.removeItem(item.id);
+                              _loadCartItems();
+                            },
                           ),
                         ],
                       ),
@@ -189,7 +180,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    Product.clearAllProducts();
+                    // Product.clearAllProducts();
                     _loadCartItems();
                   },
                   style: ElevatedButton.styleFrom(

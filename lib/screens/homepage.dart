@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shopify/provider/cartprovider.dart';
 import 'package:shopify/screens/ShoppingCartScreen.dart';
 import 'package:shopify/screens/productdetails.dart';
 import 'loginpage.dart';
@@ -12,6 +13,9 @@ import 'package:shopify/services/product_service.dart';
 import 'package:shopify/services/auth_service.dart';
 // Import your Product model
 import 'package:shopify/screens/profilescreen.dart';
+
+//badge
+import 'package:badges/badges.dart' as badges;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -48,6 +52,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final cartProvider = Provider.of<CartProvider>(context); // Add this
     final isUserRegistered = authService.isAuthenticated;
 
     double screenWidth = MediaQuery.of(context).size.width;
@@ -74,20 +79,21 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
-                IconButton(
-                  icon: Icon(Icons.shopping_cart, color: Colors.white),
-                  onPressed: () {
-                    Navigator.push(
-                      context, // Use the provided context
-                      MaterialPageRoute(
-                        builder: (context) => const ShoppingCartScreen(),
-                        fullscreenDialog:
-                            true, // Optional: makes it slide up on iOS
-                      ),
-                    );
-                  },
-                ),
+            badges.Badge(
+      badgeContent: Text('${cartProvider.itemCount}'),
+      child: IconButton(
+        icon: Icon(Icons.shopping_cart, color: Colors.white),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ShoppingCartScreen(),
+              fullscreenDialog: true,
+            ),
+          );
+        },
+      ),
+    )
               ],
             ),
           ),

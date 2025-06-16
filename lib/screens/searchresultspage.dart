@@ -61,7 +61,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   }
 
   Widget buildProductCard(Product product) {
-    return Container(
+    return  Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -86,10 +86,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
                     : Icon(Icons.image_not_supported, size: 50),
           ),
           SizedBox(height: 8),
-          Text(
-            '\UGX ${product.price.toStringAsFixed(2)}',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
+        
           SizedBox(height: 4),
           Text(
             product.name,

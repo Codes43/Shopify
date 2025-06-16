@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shopify/models/product_model.dart';
-import 'package:shopify/screens/ShoppingCartScreen.dart';
+import 'package:shopify/provider/cartprovider.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -37,7 +38,8 @@ class _ProductPageState extends State<ProductDetails> {
 
   Future<void> addToCart(Product product, BuildContext context) async {
     try {
-      await Product.addProdToCart(product);
+      final cartProvider = Provider.of<CartProvider>(context, listen: false);
+      await cartProvider.addToCart(product);
       setState(() {
         isAddedToCart = true;
       });
@@ -65,6 +67,9 @@ class _ProductPageState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+    // When adding a product to cart:
+
+  
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,

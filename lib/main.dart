@@ -2,15 +2,23 @@ import 'package:flutter/material.dart';
 import 'screens/splashscreen.dart'; // Add this
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
+import 'package:shopify/provider/cartprovider.dart';// Add this
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final authService = AuthService();
+  final cartProvider = CartProvider();
   await authService.initialize(); // Initialize auth service
   
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => authService,
+    MultiProvider(providers: 
+    ///added multiple provider
+      [
+        ChangeNotifierProvider(create: (_) => authService),
+        ChangeNotifierProvider(create: (_) => cartProvider), 
+      ],
       child: Shopify(),
     ),
   );
