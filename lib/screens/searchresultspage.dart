@@ -5,6 +5,7 @@ import 'homepage.dart';
 import 'profilescreen.dart';
 import 'package:shopify/models/product_model.dart';
 import 'package:shopify/services/product_service.dart';
+import 'package:shopify/screens/bookmarkscreen.dart' as bookmark;
 
 class SearchResultsPage extends StatefulWidget {
   final String searchTerm;
@@ -225,7 +226,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
             case 1:
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => BookmarkPage()),
+                MaterialPageRoute(builder: (_) => bookmark.BookmarkPage()),
               );
               break;
             case 2:

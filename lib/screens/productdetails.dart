@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopify/models/product_model.dart';
 import 'package:shopify/provider/cartprovider.dart';
+import 'package:shopify/provider/favorites_provider.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -12,15 +13,8 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductDetails> {
-  bool isFavorite = false;
   int quantity = 1;
   bool isAddedToCart = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-  }
 
   void increaseQuantity() {
     setState(() {
@@ -67,6 +61,12 @@ class _ProductPageState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final favoritesProvider = Provider.of<FavoritesProvider>(context);
+    final isFavorite = favoritesProvider.isFavorite(widget.product);
+
+    void toggleFavorite() {
+      favoritesProvider.toggleFavorite(widget.product);
+    }
     // When adding a product to cart:
 
   

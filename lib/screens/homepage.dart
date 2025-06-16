@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:shopify/provider/cartprovider.dart';
-import 'package:shopify/screens/ShoppingCartScreen.dart';
-import 'package:shopify/screens/productdetails.dart';
-import 'loginpage.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'searchresultspage.dart';
+import 'package:shopify/provider/favorites_provider.dart';
 
+import 'package:shopify/screens/ShoppingCartScreen.dart';
+import 'package:shopify/screens/productdetails.dart';
 import 'package:shopify/models/product_model.dart'; // Import your Product model
 import 'package:shopify/services/product_service.dart';
 import 'package:shopify/services/auth_service.dart';
-// Import your Product model
 import 'package:shopify/screens/profilescreen.dart';
+import 'package:shopify/screens/bookmarkscreen.dart';
 
+import 'loginpage.dart';
+import 'searchresultspage.dart';
 //badge
-import 'package:badges/badges.dart' as badges;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -281,44 +282,60 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => HomePage()),
-              );
-              break;
-            case 1:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => BookmarkPage()),
-              );
-              break;
-            case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => isUserRegistered ? ProfilePage() : LoginPage(),
-                ),
-              );
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_border),
-            label: 'Bookmarks',
+     bottomNavigationBar: Consumer<FavoritesProvider>(
+  builder: (context, favoritesProvider, child) {
+    return BottomNavigationBar(
+      backgroundColor: Colors.white,
+      selectedItemColor: Colors.black,
+      unselectedItemColor: Colors.grey,
+      onTap: (index) {
+        switch (index) {
+          case 0:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => HomePage()),
+            );
+            break;
+          case 1:
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => BookmarkPage()),
+            );
+            break;
+          case 2:
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => isUserRegistered ? ProfilePage() : LoginPage(),
+              ),
+            );
+            break;
+        }
+      },
+      items: [
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: badges.Badge(
+            badgeContent: Text(
+              '${favoritesProvider.favorites.length}',
+              style: const TextStyle(color: Colors.white, fontSize: 10),
+            ),
+            showBadge: favoritesProvider.favorites.isNotEmpty,
+            child: const Icon(Icons.bookmark_border),
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-      ),
+          label: 'Bookmarks',
+        ),
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+      ],
+    );
+  },
+),
     );
   }
 
@@ -461,14 +478,4 @@ class _HomePageState extends State<HomePage> {
   ];
 }
 
-class BookmarkPage extends StatelessWidget {
-  const BookmarkPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Bookmarks')),
-      body: Center(child: Text('This is the Bookmark page')),
-    );
-  }
-}

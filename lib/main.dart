@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'screens/splashscreen.dart'; // Add this
+import 'screens/splashscreen.dart'; 
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
-import 'package:shopify/provider/cartprovider.dart';// Add this
+import 'package:shopify/provider/cartprovider.dart';
+import 'package:shopify/provider/favorites_provider.dart';
 
-
-
+// And in providers list:
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final authService = AuthService();
@@ -18,6 +18,7 @@ void main() async {
       [
         ChangeNotifierProvider(create: (_) => authService),
         ChangeNotifierProvider(create: (_) => cartProvider), 
+        ChangeNotifierProvider(create: (_) => FavoritesProvider()),
       ],
       child: Shopify(),
     ),
