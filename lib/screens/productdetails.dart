@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopify/models/product_model.dart';
+import 'package:shopify/screens/ShoppingCartScreen.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -34,17 +35,32 @@ class _ProductPageState extends State<ProductDetails> {
     }
   }
 
-  void addToCart() {
-    setState(() {
-      isAddedToCart = true;
-    });
+  Future<void> addToCart(Product product, BuildContext context) async {
+    try {
+      await Product.addProdToCart(product);
+      setState(() {
+        isAddedToCart = true;
+      });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Product added to cart!'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+      // Show success message
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Item added to cart')));
+
+      // Optional: Navigate to cart screen
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => const ShoppingCartScreen(),
+      //     fullscreenDialog: true,
+      //   ),
+      // );
+    } catch (error) {
+      print('Error adding to cart: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to add item to cart')),
+      );
+    }
   }
 
   @override
@@ -53,11 +69,9 @@ class _ProductPageState extends State<ProductDetails> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: IconButton(
-          icon: Icon(Icons.chevron_left),
+          icon: const Icon(Icons.chevron_left),
           color: Colors.white,
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Padding(
@@ -67,45 +81,20 @@ class _ProductPageState extends State<ProductDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 24),
-              Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
+              SizedBox(
+                height: 300, // Fixed height to prevent unbounded constraints
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                ),
-                child: Stack(
-                  children: [
-                    Center(
-                      child:
-                          widget.product.imageUrl.isNotEmpty
-                              ? Image.network(
-                                widget.product.imageUrl,
-                                fit: BoxFit.cover,
-                                errorBuilder:
-                                    (context, error, stackTrace) =>
-                                        Icon(Icons.broken_image, size: 50),
-                              )
-                              : Icon(Icons.image_not_supported, size: 50),
-                    ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          'NEW',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  child:
+                      widget.product.imageUrl.isNotEmpty
+                          ? Image.network(
+                            widget.product.imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) =>
+                                    const Icon(Icons.broken_image, size: 50),
+                          )
+                          : const Icon(Icons.image_not_supported, size: 50),
                 ),
               ),
               const SizedBox(height: 16),
@@ -115,7 +104,7 @@ class _ProductPageState extends State<ProductDetails> {
                   Expanded(
                     child: Text(
                       widget.product.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.grey,
@@ -133,8 +122,8 @@ class _ProductPageState extends State<ProductDetails> {
               ),
               const SizedBox(height: 16),
               Text(
-                'UGX  ${widget.product.price}',
-                style: TextStyle(
+                'UGX ${widget.product.price}',
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -143,15 +132,39 @@ class _ProductPageState extends State<ProductDetails> {
               const SizedBox(height: 24),
               Text(
                 widget.product.description,
-                style: TextStyle(fontSize: 16, height: 1.5),
+                style: const TextStyle(fontSize: 16, height: 1.5),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
+
+              // Quantity Selector
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: decreaseQuantity,
+                  ),
+                  Text(
+                    quantity.toString(),
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: increaseQuantity,
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 100),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: isAddedToCart ? null : addToCart,
+                    onPressed:
+                        isAddedToCart
+                            ? null
+                            : () => addToCart(widget.product, context),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: Colors.black,
@@ -166,6 +179,7 @@ class _ProductPageState extends State<ProductDetails> {
                   ),
                 ),
               ),
+              const SizedBox(height: 24),
             ],
           ),
         ),

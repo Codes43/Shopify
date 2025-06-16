@@ -30,9 +30,10 @@ class ProfilePage extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 80,
-                backgroundImage: user?['avatar'] != null 
-                  ? NetworkImage(user!['avatar'])
-                  : AssetImage("assets/user.png") as ImageProvider,
+                backgroundImage:
+                    user?['avatar'] != null
+                        ? NetworkImage(user!['avatar'])
+                        : AssetImage("assets/user.png") as ImageProvider,
               ),
               const SizedBox(height: 20),
               Text(
@@ -46,10 +47,7 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 user?['email'] ?? 'No email',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey[700],
-                ),
+                style: TextStyle(fontSize: 18, color: Colors.grey[700]),
               ),
               const SizedBox(height: 40),
               ElevatedButton(
@@ -61,7 +59,10 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () async {
-                  final authService = Provider.of<AuthService>(context, listen: false);
+                  final authService = Provider.of<AuthService>(
+                    context,
+                    listen: false,
+                  );
                   await authService.logout();
                   Navigator.pushReplacement(
                     context,

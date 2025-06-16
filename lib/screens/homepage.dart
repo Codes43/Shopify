@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shopify/screens/ShoppingCartScreen.dart';
 import 'package:shopify/screens/productdetails.dart';
 import 'loginpage.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'searchresultspage.dart';
 import 'package:shopify/models/product_model.dart'; // Import your Product model
 import 'package:shopify/services/product_service.dart';
 import 'package:shopify/services/auth_service.dart';
+// Import your Product model
 import 'package:shopify/screens/profilescreen.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,6 +36,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void toCart() {
     _searchController.dispose();
     super.dispose();
   }
@@ -70,7 +77,16 @@ class _HomePageState extends State<HomePage> {
 
                 IconButton(
                   icon: Icon(Icons.shopping_cart, color: Colors.white),
-                  onPressed: () => print("To Cart Page"),
+                  onPressed: () {
+                    Navigator.push(
+                      context, // Use the provided context
+                      MaterialPageRoute(
+                        builder: (context) => const ShoppingCartScreen(),
+                        fullscreenDialog:
+                            true, // Optional: makes it slide up on iOS
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
