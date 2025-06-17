@@ -8,6 +8,7 @@ class Product {
   final String description;
   final double price;
   final String imageUrl;
+  final String category;
 
   Product({
     required this.id,
@@ -15,6 +16,7 @@ class Product {
     required this.description,
     required this.price,
     required this.imageUrl,
+    required this.category
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -30,6 +32,7 @@ class Product {
               : json['price'].toDouble(),
       imageUrl: json['image'],
       description: json['description'].toString(),
+      category: json['category'] ?? 'All',
     );
   }
 
@@ -40,6 +43,7 @@ class Product {
       'price': price,
       'image': imageUrl,
       'description': description,
+      'category':category
     };
   }
 
