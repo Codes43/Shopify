@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopify/provider/favorites_provider.dart';
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:shopify/screens/ShoppingCartScreen.dart';
 import 'package:shopify/screens/productdetails.dart';
 import 'package:shopify/models/product_model.dart'; // Import your Product model
@@ -30,13 +32,14 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   late Future<List<Product>> _productsFuture;
   final ProductService _productService = ProductService();
+  String _selectedCategory = 'All';
 
   @override
   void initState() {
     super.initState();
 
     _productsFuture =
-        _productService.getProducts(); // Initialize the future in initState
+        _productService.getProducts(); // Initialize the future in initState of productts
   }
 
   @override
@@ -50,6 +53,12 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+void _fetchProductsForCategory(String category) {
+  setState(() {
+    _selectedCategory = category;
+    _productsFuture = _productService.getProductsByCategory(category);
+  });
+}
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
@@ -173,43 +182,140 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  SizedBox(
-                    height:
-                        screenWidth > 800
-                            ? 36
-                            : 100, // 36 for wide, 100 for mobile
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildCategoryTile(
-                          Icons.star,
-                          'Popular',
-                          isSelected: true,
-                          screenWidth: screenWidth,
-                        ),
-                        _buildCategoryTile(
-                          Icons.chair_alt,
-                          'Chairs',
-                          screenWidth: screenWidth,
-                        ),
-                        _buildCategoryTile(
-                          Icons.table_bar,
-                          'Tables',
-                          screenWidth: screenWidth,
-                        ),
-                        _buildCategoryTile(
-                          Icons.weekend,
-                          'Sofas',
-                          screenWidth: screenWidth,
-                        ),
-                        _buildCategoryTile(
-                          Icons.bed,
-                          'Beds',
-                          screenWidth: screenWidth,
-                        ),
+
+                    ),
+                    SizedBox(width: 12),
+                    Container(
+                      height: 48,
+                      width: 48,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.search, color: Colors.white),
+                        onPressed: () {
+                          String searchTerm = _searchController.text.trim();
+                          if (searchTerm.isNotEmpty) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) => SearchResultsPage(
+                                      searchTerm: searchTerm,
+                                      isUserRegistered: isUserRegistered,
+                                    ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  height:
+                      screenWidth > 800
+                          ? 36
+                          : 100, // 36 for wide, 100 for mobile
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                          _buildCategoryTile(
+                        Icons.star,
+                        'All', // Changed 'Popular' to 'All' for general products
+                        isSelected: _selectedCategory == 'All',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('All'),
+                      ),
+                      _buildCategoryTile(
+                         FontAwesomeIcons.mobilePhone,
+                        'Phones',
+                        isSelected: _selectedCategory == 'Phones',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Phones'),
+                      ),
+                      _buildCategoryTile(
+                         Icons.live_tv,
+                        'Electronics',
+                        isSelected: _selectedCategory == 'Electronics',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Electronics'),
+                      ),
+                      _buildCategoryTile(
+                         Icons.coffee_maker,
+                        'Appliances',
+                        isSelected: _selectedCategory == 'Appliances',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Appliances'),
+                      ),
+                      _buildCategoryTile(
+                         Icons.laptop_mac,
+                        'Computing',
+                        isSelected: _selectedCategory == 'Computing',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Computing'),
+                      ),
+                      _buildCategoryTile(
+                         Icons.watch,
+                        'Fashion',
+                        isSelected: _selectedCategory == 'Fashion',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Fashion'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.sports_esports,
+                        'Gaming',
+                        isSelected: _selectedCategory == 'Gaming',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Gaming'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.chair,
+                        'Furniture',
+                        isSelected: _selectedCategory == 'Furniture',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Furniture'),
+                      ),
+                      _buildCategoryTile(
+                         
+                       Icons.spa_outlined,
+              
+                        'Beauty',
+                        isSelected: _selectedCategory == 'Beauty',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Beauty'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.home , 
+                        'Home',
+                        isSelected: _selectedCategory == 'home',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('home'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.emoji_food_beverage , 
+                        'Beverages',
+                        isSelected: _selectedCategory == 'Beverages',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Beverages'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.child_care , 
+                        'Baby',
+                        isSelected: _selectedCategory == 'Baby',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Baby'),
+                      ),
+                      _buildCategoryTile(
+                        FontAwesomeIcons.appleWhole , 
+                        'Others ',
+                        isSelected: _selectedCategory == 'others',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('others'),
+                      ),
+  
                       ],
                     ),
                   ),
@@ -359,7 +465,8 @@ class _HomePageState extends State<HomePage> {
           MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
         );
       },
-      child: Card(
+      child: Card( 
+        color: Colors.white,
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
@@ -395,13 +502,13 @@ class _HomePageState extends State<HomePage> {
                 overflow: TextOverflow.ellipsis,
               ),
               Align(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.bottomCenter,
                 child: Text(
-                  'UGX ${product.price.toStringAsFixed(2)}',
+                  'UGX ${product.formattedPrice}',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: const Color.fromARGB(255, 13, 35, 236),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                    color: const Color.fromARGB(255, 14, 91, 207),
                   ),
                 ),
               ),
@@ -417,70 +524,74 @@ class _HomePageState extends State<HomePage> {
     String label, {
     bool isSelected = false,
     required double screenWidth,
+    required VoidCallback onTap,
   }) {
     bool isWideScreen = screenWidth > 800;
 
     return Padding(
       padding: const EdgeInsets.only(right: 12.0),
       child:
-          isWideScreen
-              ? Container(
-                width: 120,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: isSelected ? Colors.black : Colors.white,
-                  borderRadius: BorderRadius.circular(9),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          GestureDetector(
+            onTap: onTap,
+            child: isWideScreen
+                ? Container(
+                  width: 120,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.black : Colors.white,
+                    borderRadius: BorderRadius.circular(9),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        icon,
+                        color: isSelected ? Colors.white : Colors.black54,
+                        size: 28,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        label,
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : Colors.black87,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                : Column(
                   children: [
-                    Icon(
-                      icon,
-                      color: isSelected ? Colors.white : Colors.black54,
-                      size: 28,
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: isSelected ? Colors.black : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          icon,
+                          color: isSelected ? Colors.white : Colors.black54,
+                          size: 28,
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(height: 6),
                     Text(
                       label,
                       style: TextStyle(
-                        color: isSelected ? Colors.white : Colors.black87,
+                        color: isSelected ? Colors.black : Colors.grey[600],
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
                   ],
                 ),
-              )
-              : Column(
-                children: [
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: isSelected ? Colors.black : Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        icon,
-                        color: isSelected ? Colors.white : Colors.black54,
-                        size: 28,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 6),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      color: isSelected ? Colors.black : Colors.grey[600],
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
+          ),
     );
   }
 

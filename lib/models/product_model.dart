@@ -1,6 +1,8 @@
 import 'dart:convert';
-
+import 'package:shopify/models/category_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
+
 
 class Product {
   final int id;
@@ -8,6 +10,7 @@ class Product {
   final String description;
   final double price;
   final String imageUrl;
+  final Category? category;
 
   Product({
     required this.id,
@@ -15,9 +18,17 @@ class Product {
     required this.description,
     required this.price,
     required this.imageUrl,
+    this.category
   });
 
+  String get formattedPrice {
+    final NumberFormat formatter = NumberFormat("#,##0", "en_US");
+    return formatter.format(price);
+  }
+
+
   factory Product.fromJson(Map<String, dynamic> json) {
+
     return Product(
       id:
           json['id'] is String
@@ -30,6 +41,9 @@ class Product {
               : json['price'].toDouble(),
       imageUrl: json['image'],
       description: json['description'].toString(),
+      category: json['category'] != null
+          ? Category.fromJson(json['category'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -40,6 +54,7 @@ class Product {
       'price': price,
       'image': imageUrl,
       'description': description,
+      'category':category
     };
   }
 
