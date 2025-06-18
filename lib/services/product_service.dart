@@ -4,7 +4,7 @@ import 'package:shopify/models/product_model.dart';
 
 class ProductService {
 
-  final String _baseUrl = 'http://127.0.0.1:8000/';
+  final String _baseUrl = 'https://shopifyapi-tx6d.onrender.com';
 
   Future<List<Product>> getProducts() async {
     String url = '$_baseUrl/products/';
@@ -110,7 +110,7 @@ Future<Product> getProduct(pId) async {
 
 }
 class ProductSearchService {
-  final String baseUrl = 'https://shopifyapi-tx6d.onrender.com/';
+  final String baseUrl = 'https://shopifyapi-tx6d.onrender.com';
 
 
   Future<List<Product>> searchProducts(String query) async {

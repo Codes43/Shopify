@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:shopify/models/category_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
+
 
 class Product {
   final int id;
@@ -18,6 +20,12 @@ class Product {
     required this.imageUrl,
     this.category
   });
+
+  String get formattedPrice {
+    final NumberFormat formatter = NumberFormat("#,##0", "en_US");
+    return formatter.format(price);
+  }
+
 
   factory Product.fromJson(Map<String, dynamic> json) {
 

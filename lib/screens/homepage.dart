@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopify/provider/favorites_provider.dart';
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:shopify/screens/ShoppingCartScreen.dart';
 import 'package:shopify/screens/productdetails.dart';
 import 'package:shopify/models/product_model.dart'; // Import your Product model
@@ -192,32 +194,90 @@ void _fetchProductsForCategory(String category) {
                         onTap: () => _fetchProductsForCategory('All'),
                       ),
                       _buildCategoryTile(
-                        Icons.laptop,
+                         FontAwesomeIcons.mobilePhone,
+                        'Phones',
+                        isSelected: _selectedCategory == 'Phones',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Phones'),
+                      ),
+                      _buildCategoryTile(
+                         Icons.live_tv,
                         'Electronics',
                         isSelected: _selectedCategory == 'Electronics',
                         screenWidth: screenWidth,
                         onTap: () => _fetchProductsForCategory('Electronics'),
                       ),
                       _buildCategoryTile(
-                        Icons.watch,
+                         Icons.coffee_maker,
+                        'Appliances',
+                        isSelected: _selectedCategory == 'Appliances',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Appliances'),
+                      ),
+                      _buildCategoryTile(
+                         Icons.laptop_mac,
+                        'Computing',
+                        isSelected: _selectedCategory == 'Computing',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Computing'),
+                      ),
+                      _buildCategoryTile(
+                         Icons.watch,
                         'Fashion',
                         isSelected: _selectedCategory == 'Fashion',
                         screenWidth: screenWidth,
                         onTap: () => _fetchProductsForCategory('Fashion'),
                       ),
                       _buildCategoryTile(
-                        Icons.spa,
+                        Icons.sports_esports,
+                        'Gaming',
+                        isSelected: _selectedCategory == 'Gaming',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Gaming'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.chair,
+                        'Furniture',
+                        isSelected: _selectedCategory == 'Furniture',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Furniture'),
+                      ),
+                      _buildCategoryTile(
+                         
+                       Icons.spa_outlined,
+              
                         'Beauty',
                         isSelected: _selectedCategory == 'Beauty',
                         screenWidth: screenWidth,
                         onTap: () => _fetchProductsForCategory('Beauty'),
                       ),
                       _buildCategoryTile(
-                        Icons.bed,
-                        'Beds',
-                        isSelected: _selectedCategory == 'Beds',
+                        Icons.home , 
+                        'Home',
+                        isSelected: _selectedCategory == 'home',
                         screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Beds'),
+                        onTap: () => _fetchProductsForCategory('home'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.emoji_food_beverage , 
+                        'Beverages',
+                        isSelected: _selectedCategory == 'Beverages',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Beverages'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.child_care , 
+                        'Baby',
+                        isSelected: _selectedCategory == 'Baby',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Baby'),
+                      ),
+                      _buildCategoryTile(
+                        FontAwesomeIcons.appleWhole , 
+                        'Others ',
+                        isSelected: _selectedCategory == 'others',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('others'),
                       ),
                     ],
                   ),
@@ -363,7 +423,8 @@ void _fetchProductsForCategory(String category) {
           MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
         );
       },
-      child: Card(
+      child: Card( 
+        color: Colors.white,
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
@@ -399,13 +460,13 @@ void _fetchProductsForCategory(String category) {
                 overflow: TextOverflow.ellipsis,
               ),
               Align(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.bottomCenter,
                 child: Text(
-                  'UGX ${product.price.toStringAsFixed(2)}',
+                  'UGX ${product.formattedPrice}',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: const Color.fromARGB(255, 13, 35, 236),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                    color: const Color.fromARGB(255, 14, 91, 207),
                   ),
                 ),
               ),
