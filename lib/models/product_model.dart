@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:shopify/models/category_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Product {
@@ -8,7 +8,7 @@ class Product {
   final String description;
   final double price;
   final String imageUrl;
-  final String category;
+  final Category? category;
 
   Product({
     required this.id,
@@ -16,10 +16,11 @@ class Product {
     required this.description,
     required this.price,
     required this.imageUrl,
-    required this.category
+    this.category
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
+
     return Product(
       id:
           json['id'] is String
@@ -32,7 +33,9 @@ class Product {
               : json['price'].toDouble(),
       imageUrl: json['image'],
       description: json['description'].toString(),
-      category: json['category'] ?? 'All',
+      category: json['category'] != null
+          ? Category.fromJson(json['category'] as Map<String, dynamic>)
+          : null,
     );
   }
 

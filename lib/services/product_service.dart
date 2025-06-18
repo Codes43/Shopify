@@ -4,14 +4,17 @@ import 'package:shopify/models/product_model.dart';
 
 class ProductService {
 
-  final String _baseUrl = 'https://shopifyapi-tx6d.onrender.com/products/';
+  final String _baseUrl = 'http://127.0.0.1:8000/';
 
   Future<List<Product>> getProducts() async {
+    String url = '$_baseUrl/products/';
+
     try {
-      final response = await http.get(Uri.parse(_baseUrl));
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         print('API Response Status: ${response.statusCode}');
+        print('API Response Status: ${response.body}');
 
         List<dynamic> productJson = json.decode(response.body);
 
@@ -46,7 +49,7 @@ class ProductService {
     
     String url;
     if (category == 'All') {
-      url = '$_baseUrl/products/'; // Fetch all if 'All' is selected
+      url = '$_baseUrl/products/';
     } else {
       url = '$_baseUrl/products/?category=$category';
     }
@@ -63,8 +66,6 @@ class ProductService {
       throw Exception('Failed to connect to the server: $e');
     }
   }
-
-
 
 
 Future<Product> getProduct(pId) async {
