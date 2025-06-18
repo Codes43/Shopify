@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopify/provider/cartprovider.dart';
-
+import 'package:shopify/screens/placeorderpage.dart';
 
 class ShoppingCartScreen extends StatefulWidget {
   const ShoppingCartScreen({super.key});
@@ -23,9 +22,12 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
   Future<void> _loadCartItems() async {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
     await cartProvider.loadCartItems();
-    
+
     setState(() {
-      subtotal = cartProvider.cartItems.fold(0, (sum, item) => sum + item.price);
+      subtotal = cartProvider.cartItems.fold(
+        0,
+        (sum, item) => sum + item.price,
+      );
     });
   }
 
@@ -120,7 +122,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                               ],
                             ),
                           ),
-                            IconButton(
+                          IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () async {
                               await cartProvider.removeItem(item.id);
@@ -180,8 +182,12 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Product.clearAllProducts();
-                    _loadCartItems();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PlaceOrderPage(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
