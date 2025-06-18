@@ -155,35 +155,8 @@ void _fetchProductsForCategory(String category) {
                           ),
                         ),
                       ),
-                      SizedBox(width: 12),
-                      Container(
-                        height: 48,
-                        width: 48,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: IconButton(
-                          icon: Icon(Icons.search, color: Colors.white),
-                          onPressed: () {
-                            String searchTerm = _searchController.text.trim();
-                            if (searchTerm.isNotEmpty) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) => SearchResultsPage(
-                                        searchTerm: searchTerm,
-                                        isUserRegistered: isUserRegistered,
-                                      ),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                      ),
 
-                    ),
+                  
                     SizedBox(width: 12),
                     Container(
                       height: 48,
@@ -193,7 +166,7 @@ void _fetchProductsForCategory(String category) {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: IconButton(
-                        icon: Icon(Icons.search, color: Colors.white),
+                        icon: Icon(FontAwesomeIcons.magnifyingGlass, color: Colors.white),
                         onPressed: () {
                           String searchTerm = _searchController.text.trim();
                           if (searchTerm.isNotEmpty) {
@@ -211,8 +184,10 @@ void _fetchProductsForCategory(String category) {
                         },
                       ),
                     ),
-                  ],
-                ),
+                    ],
+              ),
+              
+
                 SizedBox(height: 20),
                 SizedBox(
                   height:
@@ -392,12 +367,12 @@ void _fetchProductsForCategory(String category) {
                       }
                     },
                   ),
-                ],
+           ] )
               ),
-            ),
-          ),
-        ),
-      ),
+              ),
+            ),),
+        
+      
 
       bottomNavigationBar: Consumer<FavoritesProvider>(
         builder: (context, favoritesProvider, child) {
