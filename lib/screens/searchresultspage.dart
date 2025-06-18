@@ -69,43 +69,49 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
           context,
           MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
         );
-      }, child:  Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
-        ],
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        padding: EdgeInsets.all(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child:
+                  product.imageUrl.isNotEmpty
+                      ? Image.network(
+                        product.imageUrl,
+                        fit: BoxFit.contain,
+                        errorBuilder:
+                            (context, error, stackTrace) =>
+                                Icon(Icons.broken_image, size: 50),
+                      )
+                      : Icon(Icons.image_not_supported, size: 50),
+            ),
+            SizedBox(height: 8),
+
+            SizedBox(height: 4),
+            Text(
+              product.name,
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
-      padding: EdgeInsets.all(12),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child:
-                product.imageUrl.isNotEmpty
-                    ? Image.network(
-                      product.imageUrl,
-                      fit: BoxFit.contain,
-                      errorBuilder:
-                          (context, error, stackTrace) =>
-                              Icon(Icons.broken_image, size: 50),
-                    )
-                    : Icon(Icons.image_not_supported, size: 50),
-          ),
-          SizedBox(height: 8),
-        
-          SizedBox(height: 4),
-          Text(
-            product.name,
-            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    ));
+    );
   }
 
   @override
