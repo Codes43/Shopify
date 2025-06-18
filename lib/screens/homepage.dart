@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:badges/badges.dart' as badges;
@@ -80,21 +82,21 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-            badges.Badge(
-      badgeContent: Text('${cartProvider.itemCount}'),
-      child: IconButton(
-        icon: Icon(Icons.shopping_cart, color: Colors.white),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ShoppingCartScreen(),
-              fullscreenDialog: true,
-            ),
-          );
-        },
-      ),
-    )
+                badges.Badge(
+                  badgeContent: Text('${cartProvider.itemCount}'),
+                  child: IconButton(
+                    icon: Icon(Icons.shopping_cart, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ShoppingCartScreen(),
+                          fullscreenDialog: true,
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),
@@ -257,6 +259,7 @@ class _HomePageState extends State<HomePage> {
                       return Center(child: Text('No products found.'));
                     } else {
                       final products = snapshot.data!;
+
                       return GridView.builder(
                         padding: EdgeInsets.only(top: 16),
                         shrinkWrap: true,
@@ -282,64 +285,66 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
 
-     bottomNavigationBar: Consumer<FavoritesProvider>(
-  builder: (context, favoritesProvider, child) {
-    return BottomNavigationBar(
-      backgroundColor: Colors.white,
-      selectedItemColor: Colors.black,
-      unselectedItemColor: Colors.grey,
-      onTap: (index) {
-        switch (index) {
-          case 0:
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => HomePage()),
-            );
-            break;
-          case 1:
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => BookmarkPage()),
-            );
-            break;
-          case 2:
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => isUserRegistered ? ProfilePage() : LoginPage(),
+      bottomNavigationBar: Consumer<FavoritesProvider>(
+        builder: (context, favoritesProvider, child) {
+          return BottomNavigationBar(
+            backgroundColor: Colors.white,
+            selectedItemColor: Colors.black,
+            unselectedItemColor: Colors.grey,
+            onTap: (index) {
+              switch (index) {
+                case 0:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => HomePage()),
+                  );
+                  break;
+                case 1:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => BookmarkPage()),
+                  );
+                  break;
+                case 2:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) => isUserRegistered ? ProfilePage() : LoginPage(),
+                    ),
+                  );
+                  break;
+              }
+            },
+            items: [
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
               ),
-            );
-            break;
-        }
-      },
-      items: [
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: badges.Badge(
-            badgeContent: Text(
-              '${favoritesProvider.favorites.length}',
-              style: const TextStyle(color: Colors.white, fontSize: 10),
-            ),
-            showBadge: favoritesProvider.favorites.isNotEmpty,
-            child: const Icon(Icons.bookmark_border),
-          ),
-          label: 'Bookmarks',
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
-    );
-  },
-),
+              BottomNavigationBarItem(
+                icon: badges.Badge(
+                  badgeContent: Text(
+                    '${favoritesProvider.favorites.length}',
+                    style: const TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                  showBadge: favoritesProvider.favorites.isNotEmpty,
+                  child: const Icon(Icons.bookmark_border),
+                ),
+                label: 'Bookmarks',
+              ),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
   Widget _buildProductGridItem(Product product) {
+    //print('fetched products ${jsonEncode(product.imageUrl)}');
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -474,8 +479,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Image> imgList = [
     Image.asset('assets/splash.png', fit: BoxFit.cover),
+
     Image.asset('assets/big_image.jpg', fit: BoxFit.cover),
   ];
 }
-
-
