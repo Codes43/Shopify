@@ -6,6 +6,7 @@ import 'profilescreen.dart';
 import 'package:shopify/models/product_model.dart';
 import 'package:shopify/services/product_service.dart';
 import 'package:shopify/screens/bookmarkscreen.dart' as bookmark;
+import 'package:shopify/widgets/common_bottom_nav.dart';
 
 class SearchResultsPage extends StatefulWidget {
   final String searchTerm;
@@ -216,46 +217,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
           ],
         ),
       ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => HomePage()),
-              );
-              break;
-            case 1:
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => bookmark.BookmarkPage()),
-              );
-              break;
-            case 2:
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) =>
-                          widget.isUserRegistered ? ProfilePage() : LoginPage(),
-                ),
-              );
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_border),
-            label: 'Bookmarks',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-      ),
+      bottomNavigationBar: CommonBottomNav(currentIndex: 0),
     );
   }
 }
