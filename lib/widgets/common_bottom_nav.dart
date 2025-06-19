@@ -11,7 +11,8 @@ import 'package:shopify/services/auth_service.dart';
 class CommonBottomNav extends StatelessWidget {
   final int currentIndex;
 
-  const CommonBottomNav({Key? key, required this.currentIndex}) : super(key: key);
+  const CommonBottomNav({Key? key, required this.currentIndex})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +30,23 @@ class CommonBottomNav extends StatelessWidget {
             if (index == currentIndex) return;
             switch (index) {
               case 0:
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => HomePage()),
                 );
                 break;
               case 1:
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => BookmarkPage()),
                 );
                 break;
               case 2:
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => isUserRegistered ? ProfilePage() : LoginPage(),
+                    builder:
+                        (_) => isUserRegistered ? ProfilePage() : LoginPage(),
                   ),
                 );
                 break;
