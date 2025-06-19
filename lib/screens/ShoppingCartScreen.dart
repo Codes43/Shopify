@@ -255,15 +255,8 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                                 ],
                               ),
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () async {
-                              await cartProvider.removeItem(item.id);
-                              _loadCartItems();
-                            },
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );
