@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:badges/badges.dart' as badges;
@@ -89,21 +91,21 @@ void _fetchProductsForCategory(String category) {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                badges.Badge(
-                  badgeContent: Text('${cartProvider.itemCount}'),
-                  child: IconButton(
-                    icon: Icon(Icons.shopping_cart, color: Colors.white),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ShoppingCartScreen(),
-                          fullscreenDialog: true,
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                    badges.Badge(
+                              badgeContent: Text('${cartProvider.itemCount}'),
+                              child: IconButton(
+                                icon: Icon(Icons.shopping_cart, color: Colors.white),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const ShoppingCartScreen(),
+                                      fullscreenDialog: true,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),,
               ],
             ),
           ),
@@ -433,6 +435,7 @@ void _fetchProductsForCategory(String category) {
   }
 
   Widget _buildProductGridItem(Product product) {
+    //print('fetched products ${jsonEncode(product.imageUrl)}');
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -572,6 +575,7 @@ void _fetchProductsForCategory(String category) {
 
   List<Image> imgList = [
     Image.asset('assets/splash.png', fit: BoxFit.cover),
+
     Image.asset('assets/big_image.jpg', fit: BoxFit.cover),
   ];
 }
