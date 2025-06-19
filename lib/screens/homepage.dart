@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:shopify/provider/cartprovider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:shopify/screens/ShoppingCartScreen.dart';
 import 'package:shopify/screens/productdetails.dart';
 import 'package:shopify/models/product_model.dart'; // Import your Product model
@@ -38,7 +34,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     _productsFuture =
-        _productService.getProducts(); // Initialize the future in initState of productts
+        _productService
+            .getProducts(); // Initialize the future in initState of productts
   }
 
   @override
@@ -52,12 +49,13 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-void _fetchProductsForCategory(String category) {
-  setState(() {
-    _selectedCategory = category;
-    _productsFuture = _productService.getProductsByCategory(category);
-  });
-}
+  void _fetchProductsForCategory(String category) {
+    setState(() {
+      _selectedCategory = category;
+      _productsFuture = _productService.getProductsByCategory(category);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
@@ -155,141 +153,140 @@ void _fetchProductsForCategory(String category) {
                         ),
                       ),
 
-                  
-                    SizedBox(width: 12),
-                    Container(
-                      height: 48,
-                      width: 48,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        borderRadius: BorderRadius.circular(12),
+                      SizedBox(width: 12),
+                      Container(
+                        height: 48,
+                        width: 48,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            FontAwesomeIcons.magnifyingGlass,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            String searchTerm = _searchController.text.trim();
+                            if (searchTerm.isNotEmpty) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => SearchResultsPage(
+                                        searchTerm: searchTerm,
+                                        isUserRegistered: isUserRegistered,
+                                      ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ),
-                      child: IconButton(
-                        icon: Icon(FontAwesomeIcons.magnifyingGlass, color: Colors.white),
-                        onPressed: () {
-                          String searchTerm = _searchController.text.trim();
-                          if (searchTerm.isNotEmpty) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (_) => SearchResultsPage(
-                                      searchTerm: searchTerm,
-                                      isUserRegistered: isUserRegistered,
-                                    ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
                     ],
-              ),
-              
+                  ),
 
-                SizedBox(height: 20),
-                SizedBox(
-                  height:
-                      screenWidth > 800
-                          ? 36
-                          : 100, // 36 for wide, 100 for mobile
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                          _buildCategoryTile(
-                        Icons.star,
-                        'All', // Changed 'Popular' to 'All' for general products
-                        isSelected: _selectedCategory == 'All',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('All'),
-                      ),
-                      _buildCategoryTile(
-                         FontAwesomeIcons.mobilePhone,
-                        'Phones',
-                        isSelected: _selectedCategory == 'Phones',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Phones'),
-                      ),
-                      _buildCategoryTile(
-                         Icons.live_tv,
-                        'Electronics',
-                        isSelected: _selectedCategory == 'Electronics',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Electronics'),
-                      ),
-                      _buildCategoryTile(
-                         Icons.coffee_maker,
-                        'Appliances',
-                        isSelected: _selectedCategory == 'Appliances',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Appliances'),
-                      ),
-                      _buildCategoryTile(
-                         Icons.laptop_mac,
-                        'Computing',
-                        isSelected: _selectedCategory == 'Computing',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Computing'),
-                      ),
-                      _buildCategoryTile(
-                         Icons.watch,
-                        'Fashion',
-                        isSelected: _selectedCategory == 'Fashion',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Fashion'),
-                      ),
-                      _buildCategoryTile(
-                        Icons.sports_esports,
-                        'Gaming',
-                        isSelected: _selectedCategory == 'Gaming',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Gaming'),
-                      ),
-                      _buildCategoryTile(
-                        Icons.chair,
-                        'Furniture',
-                        isSelected: _selectedCategory == 'Furniture',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Furniture'),
-                      ),
-                      _buildCategoryTile(
-                         
-                       Icons.spa_outlined,
-              
-                        'Beauty',
-                        isSelected: _selectedCategory == 'Beauty',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Beauty'),
-                      ),
-                      _buildCategoryTile(
-                        Icons.home , 
-                        'Home',
-                        isSelected: _selectedCategory == 'home',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('home'),
-                      ),
-                      _buildCategoryTile(
-                        Icons.emoji_food_beverage , 
-                        'Beverages',
-                        isSelected: _selectedCategory == 'Beverages',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Beverages'),
-                      ),
-                      _buildCategoryTile(
-                        Icons.child_care , 
-                        'Baby',
-                        isSelected: _selectedCategory == 'Baby',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('Baby'),
-                      ),
-                      _buildCategoryTile(
-                        FontAwesomeIcons.appleWhole , 
-                        'Others ',
-                        isSelected: _selectedCategory == 'others',
-                        screenWidth: screenWidth,
-                        onTap: () => _fetchProductsForCategory('others'),
-                      ),
-  
+                  SizedBox(height: 20),
+                  SizedBox(
+                    height:
+                        screenWidth > 800
+                            ? 36
+                            : 100, // 36 for wide, 100 for mobile
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _buildCategoryTile(
+                          Icons.star,
+                          'All', // Changed 'Popular' to 'All' for general products
+                          isSelected: _selectedCategory == 'All',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('All'),
+                        ),
+                        _buildCategoryTile(
+                          FontAwesomeIcons.mobilePhone,
+                          'Phones',
+                          isSelected: _selectedCategory == 'Phones',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('Phones'),
+                        ),
+                        _buildCategoryTile(
+                          Icons.live_tv,
+                          'Electronics',
+                          isSelected: _selectedCategory == 'Electronics',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('Electronics'),
+                        ),
+                        _buildCategoryTile(
+                          Icons.coffee_maker,
+                          'Appliances',
+                          isSelected: _selectedCategory == 'Appliances',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('Appliances'),
+                        ),
+                        _buildCategoryTile(
+                          Icons.laptop_mac,
+                          'Computing',
+                          isSelected: _selectedCategory == 'Computing',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('Computing'),
+                        ),
+                        _buildCategoryTile(
+                          Icons.watch,
+                          'Fashion',
+                          isSelected: _selectedCategory == 'Fashion',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('Fashion'),
+                        ),
+                        _buildCategoryTile(
+                          Icons.sports_esports,
+                          'Gaming',
+                          isSelected: _selectedCategory == 'Gaming',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('Gaming'),
+                        ),
+                        _buildCategoryTile(
+                          Icons.chair,
+                          'Furniture',
+                          isSelected: _selectedCategory == 'Furniture',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('Furniture'),
+                        ),
+                        _buildCategoryTile(
+                          Icons.spa_outlined,
+
+                          'Beauty',
+                          isSelected: _selectedCategory == 'Beauty',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('Beauty'),
+                        ),
+                        _buildCategoryTile(
+                          Icons.home,
+                          'Home',
+                          isSelected: _selectedCategory == 'home',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('home'),
+                        ),
+                        _buildCategoryTile(
+                          Icons.emoji_food_beverage,
+                          'Beverages',
+                          isSelected: _selectedCategory == 'Beverages',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('Beverages'),
+                        ),
+                        _buildCategoryTile(
+                          Icons.child_care,
+                          'Baby',
+                          isSelected: _selectedCategory == 'Baby',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('Baby'),
+                        ),
+                        _buildCategoryTile(
+                          FontAwesomeIcons.appleWhole,
+                          'Others ',
+                          isSelected: _selectedCategory == 'others',
+                          screenWidth: screenWidth,
+                          onTap: () => _fetchProductsForCategory('others'),
+                        ),
                       ],
                     ),
                   ),
@@ -366,59 +363,8 @@ void _fetchProductsForCategory(String category) {
                       }
                     },
                   ),
-           ] )
+                ],
               ),
-              ),
-            ),),
-        
-      
-
-      bottomNavigationBar: Consumer<FavoritesProvider>(
-        builder: (context, favoritesProvider, child) {
-          return BottomNavigationBar(
-            backgroundColor: Colors.white,
-            selectedItemColor: Colors.black,
-            unselectedItemColor: Colors.grey,
-            onTap: (index) {
-              switch (index) {
-                case 0:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => HomePage()),
-                  );
-                  break;
-                case 1:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => BookmarkPage()),
-                  );
-                  break;
-                case 2:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (_) => isUserRegistered ? ProfilePage() : LoginPage(),
-                    ),
-                  );
-                  break;
-              }
-            },
-            items: [
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: badges.Badge(
-                  badgeContent: Text(
-                    '${favoritesProvider.favorites.length}',
-                    style: const TextStyle(color: Colors.white, fontSize: 10),
-                  ),
-                  showBadge: favoritesProvider.favorites.isNotEmpty,
-                  child: const Icon(Icons.bookmark_border),
-                ),
-              ],
             ),
           ),
         ),
@@ -436,7 +382,7 @@ void _fetchProductsForCategory(String category) {
           MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
         );
       },
-      child: Card( 
+      child: Card(
         color: Colors.white,
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -501,10 +447,10 @@ void _fetchProductsForCategory(String category) {
 
     return Padding(
       padding: const EdgeInsets.only(right: 12.0),
-      child:
-          GestureDetector(
-            onTap: onTap,
-            child: isWideScreen
+      child: GestureDetector(
+        onTap: onTap,
+        child:
+            isWideScreen
                 ? Container(
                   width: 120,
                   height: 56,
@@ -562,7 +508,7 @@ void _fetchProductsForCategory(String category) {
                     ),
                   ],
                 ),
-          ),
+      ),
     );
   }
 
