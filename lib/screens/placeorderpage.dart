@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:provider/provider.dart';
-//import 'package:shopify/screens/ShoppingCartScreen.dart';
+import 'package:shopify/widgets/common_bottom_nav.dart';
 
 class PlaceOrderPage extends StatefulWidget {
   const PlaceOrderPage({super.key});
@@ -328,6 +327,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
           ),
         ),
       ),
+      bottomNavigationBar: CommonBottomNav(currentIndex: 1),
     );
   }
 }
