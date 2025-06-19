@@ -4,14 +4,17 @@ import 'package:shopify/models/product_model.dart';
 
 class ProductService {
 
-  final String _baseUrl = 'https://shopifyapi-tx6d.onrender.com/products/';
+  final String _baseUrl = 'https://shopifyapi-tx6d.onrender.com';
 
   Future<List<Product>> getProducts() async {
+    String url = '$_baseUrl/products/';
+
     try {
-      final response = await http.get(Uri.parse(_baseUrl));
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         print('API Response Status: ${response.statusCode}');
+        print('API Response Status: ${response.body}');
 
         List<dynamic> productJson = json.decode(response.body);
 
@@ -40,7 +43,33 @@ class ProductService {
     }
   }
 
-  Future<Product> getProduct(pId) async {
+//handle the cart 
+
+  Future<List<Product>> getProductsByCategory(String category) async {
+    
+    String url;
+    if (category == 'All') {
+      url = '$_baseUrl/products/';
+    } else {
+      url = '$_baseUrl/products/?category=$category';
+    }
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        List<dynamic> productJson = json.decode(response.body);
+        return productJson.map((json) => Product.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load products for category $category: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to connect to the server: $e');
+    }
+  }
+
+
+Future<Product> getProduct(pId) async {
+
     try {
       final response = await http.get(Uri.parse(_baseUrl + pId));
 
@@ -78,10 +107,10 @@ class ProductService {
       }
     }
   }
-}
 
+}
 class ProductSearchService {
-  final String baseUrl = 'https://shopifyapi-tx6d.onrender.com/';
+  final String baseUrl = 'https://shopifyapi-tx6d.onrender.com';
 
 
   Future<List<Product>> searchProducts(String query) async {

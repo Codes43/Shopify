@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:shopify/provider/cartprovider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:shopify/screens/ShoppingCartScreen.dart';
 import 'package:shopify/screens/productdetails.dart';
@@ -27,13 +31,14 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   late Future<List<Product>> _productsFuture;
   final ProductService _productService = ProductService();
+  String _selectedCategory = 'All';
 
   @override
   void initState() {
     super.initState();
 
     _productsFuture =
-        _productService.getProducts(); // Initialize the future in initState
+        _productService.getProducts(); // Initialize the future in initState of productts
   }
 
   @override
@@ -47,6 +52,12 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+void _fetchProductsForCategory(String category) {
+  setState(() {
+    _selectedCategory = category;
+    _productsFuture = _productService.getProductsByCategory(category);
+  });
+}
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
@@ -99,43 +110,52 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Align(
         alignment: Alignment.topCenter,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 20.0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 48,
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.search, color: Colors.grey),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: TextField(
-                                controller: _searchController,
-                                decoration: InputDecoration(
-                                  hintText: 'Search for Products',
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  border: InputBorder.none,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              _productsFuture = _productService.getProducts();
+            });
+            await _productsFuture;
+          },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 20.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 48,
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.search, color: Colors.grey),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: TextField(
+                                  controller: _searchController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Search for Products',
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    border: InputBorder.none,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+
+                  
                     SizedBox(width: 12),
                     Container(
                       height: 48,
@@ -145,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: IconButton(
-                        icon: Icon(Icons.search, color: Colors.white),
+                        icon: Icon(FontAwesomeIcons.magnifyingGlass, color: Colors.white),
                         onPressed: () {
                           String searchTerm = _searchController.text.trim();
                           if (searchTerm.isNotEmpty) {
@@ -163,8 +183,10 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
-                  ],
-                ),
+                    ],
+              ),
+              
+
                 SizedBox(height: 20),
                 SizedBox(
                   height:
@@ -174,104 +196,227 @@ class _HomePageState extends State<HomePage> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      _buildCategoryTile(
+                          _buildCategoryTile(
                         Icons.star,
-                        'Popular',
-                        isSelected: true,
+                        'All', // Changed 'Popular' to 'All' for general products
+                        isSelected: _selectedCategory == 'All',
                         screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('All'),
                       ),
                       _buildCategoryTile(
-                        Icons.chair_alt,
-                        'Chairs',
+                         FontAwesomeIcons.mobilePhone,
+                        'Phones',
+                        isSelected: _selectedCategory == 'Phones',
                         screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Phones'),
                       ),
                       _buildCategoryTile(
-                        Icons.table_bar,
-                        'Tables',
+                         Icons.live_tv,
+                        'Electronics',
+                        isSelected: _selectedCategory == 'Electronics',
                         screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Electronics'),
                       ),
                       _buildCategoryTile(
-                        Icons.weekend,
-                        'Sofas',
+                         Icons.coffee_maker,
+                        'Appliances',
+                        isSelected: _selectedCategory == 'Appliances',
                         screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Appliances'),
                       ),
                       _buildCategoryTile(
-                        Icons.bed,
-                        'Beds',
+                         Icons.laptop_mac,
+                        'Computing',
+                        isSelected: _selectedCategory == 'Computing',
                         screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Computing'),
                       ),
-                    ],
+                      _buildCategoryTile(
+                         Icons.watch,
+                        'Fashion',
+                        isSelected: _selectedCategory == 'Fashion',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Fashion'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.sports_esports,
+                        'Gaming',
+                        isSelected: _selectedCategory == 'Gaming',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Gaming'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.chair,
+                        'Furniture',
+                        isSelected: _selectedCategory == 'Furniture',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Furniture'),
+                      ),
+                      _buildCategoryTile(
+                         
+                       Icons.spa_outlined,
+              
+                        'Beauty',
+                        isSelected: _selectedCategory == 'Beauty',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Beauty'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.home , 
+                        'Home',
+                        isSelected: _selectedCategory == 'home',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('home'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.emoji_food_beverage , 
+                        'Beverages',
+                        isSelected: _selectedCategory == 'Beverages',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Beverages'),
+                      ),
+                      _buildCategoryTile(
+                        Icons.child_care , 
+                        'Baby',
+                        isSelected: _selectedCategory == 'Baby',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('Baby'),
+                      ),
+                      _buildCategoryTile(
+                        FontAwesomeIcons.appleWhole , 
+                        'Others ',
+                        isSelected: _selectedCategory == 'others',
+                        screenWidth: screenWidth,
+                        onTap: () => _fetchProductsForCategory('others'),
+                      ),
+  
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: screenWidth > 800 ? 280 : 400,
-                    autoPlay: true,
-                    viewportFraction: 1.0,
+                  SizedBox(height: 20),
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      height: screenWidth > 800 ? 280 : 400,
+                      autoPlay: true,
+                      viewportFraction: 1.0,
+                    ),
+                    items:
+                        imgList.map((image) {
+                          return Builder(
+                            builder: (context) {
+                              return Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.symmetric(horizontal: 0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    screenWidth > 800 ? 12.0 : 15.0,
+                                  ),
+                                  color: Colors.grey[200],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                    screenWidth > 800 ? 12.0 : 15.0,
+                                  ),
+                                  child: image,
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
                   ),
-                  items:
-                      imgList.map((image) {
-                        return Builder(
-                          builder: (context) {
-                            return Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.symmetric(horizontal: 0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  screenWidth > 800 ? 12.0 : 15.0,
-                                ),
-                                color: Colors.grey[200],
+                  SizedBox(height: 20),
+                  Text(
+                    "Products",
+                    style: GoogleFonts.inriaSans(
+                      color: Colors.black,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  FutureBuilder<List<Product>>(
+                    future: _productsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(child: Text('No products found.'));
+                      } else {
+                        final products = snapshot.data!;
+                        return GridView.builder(
+                          padding: EdgeInsets.only(top: 16),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: products.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount:
+                                    screenWidth > 800
+                                        ? (screenWidth / 250).floor()
+                                        : 2,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                                childAspectRatio: 0.75,
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  screenWidth > 800 ? 12.0 : 15.0,
-                                ),
-                                child: image,
-                              ),
-                            );
-                          },
+                          itemBuilder:
+                              (context, index) =>
+                                  _buildProductGridItem(products[index]),
                         );
-                      }).toList(),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  "Products",
-                  style: GoogleFonts.inriaSans(
-                    color: Colors.black,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+                      }
+                    },
                   ),
-                ),
-                FutureBuilder<List<Product>>(
-                  future: _productsFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('No products found.'));
-                    } else {
-                      final products = snapshot.data!;
-                      return GridView.builder(
-                        padding: EdgeInsets.only(top: 16),
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: products.length,
+           ] )
+              ),
+              ),
+            ),),
+        
+      
 
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: (screenWidth / 250).floor(),
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 0.75,
-                        ),
-                        itemBuilder:
-                            (context, index) =>
-                                _buildProductGridItem(products[index]),
-                      );
-                    }
-                  },
+      bottomNavigationBar: Consumer<FavoritesProvider>(
+        builder: (context, favoritesProvider, child) {
+          return BottomNavigationBar(
+            backgroundColor: Colors.white,
+            selectedItemColor: Colors.black,
+            unselectedItemColor: Colors.grey,
+            onTap: (index) {
+              switch (index) {
+                case 0:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => HomePage()),
+                  );
+                  break;
+                case 1:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => BookmarkPage()),
+                  );
+                  break;
+                case 2:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) => isUserRegistered ? ProfilePage() : LoginPage(),
+                    ),
+                  );
+                  break;
+              }
+            },
+            items: [
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: badges.Badge(
+                  badgeContent: Text(
+                    '${favoritesProvider.favorites.length}',
+                    style: const TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                  showBadge: favoritesProvider.favorites.isNotEmpty,
+                  child: const Icon(Icons.bookmark_border),
                 ),
               ],
             ),
@@ -283,6 +428,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildProductGridItem(Product product) {
+    //print('fetched products ${jsonEncode(product.imageUrl)}');
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -290,7 +436,8 @@ class _HomePageState extends State<HomePage> {
           MaterialPageRoute(builder: (_) => ProductDetails(product: product)),
         );
       },
-      child: Card(
+      child: Card( 
+        color: Colors.white,
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
@@ -326,13 +473,13 @@ class _HomePageState extends State<HomePage> {
                 overflow: TextOverflow.ellipsis,
               ),
               Align(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.bottomCenter,
                 child: Text(
-                  'UGX ${product.price.toStringAsFixed(2)}',
+                  'UGX ${product.formattedPrice}',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: const Color.fromARGB(255, 13, 35, 236),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                    color: const Color.fromARGB(255, 14, 91, 207),
                   ),
                 ),
               ),
@@ -348,75 +495,80 @@ class _HomePageState extends State<HomePage> {
     String label, {
     bool isSelected = false,
     required double screenWidth,
+    required VoidCallback onTap,
   }) {
     bool isWideScreen = screenWidth > 800;
 
     return Padding(
       padding: const EdgeInsets.only(right: 12.0),
       child:
-          isWideScreen
-              ? Container(
-                width: 120,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: isSelected ? Colors.black : Colors.white,
-                  borderRadius: BorderRadius.circular(9),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          GestureDetector(
+            onTap: onTap,
+            child: isWideScreen
+                ? Container(
+                  width: 120,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.black : Colors.white,
+                    borderRadius: BorderRadius.circular(9),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        icon,
+                        color: isSelected ? Colors.white : Colors.black54,
+                        size: 28,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        label,
+                        style: TextStyle(
+                          color: isSelected ? Colors.white : Colors.black87,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                : Column(
                   children: [
-                    Icon(
-                      icon,
-                      color: isSelected ? Colors.white : Colors.black54,
-                      size: 28,
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: isSelected ? Colors.black : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          icon,
+                          color: isSelected ? Colors.white : Colors.black54,
+                          size: 28,
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(height: 6),
                     Text(
                       label,
                       style: TextStyle(
-                        color: isSelected ? Colors.white : Colors.black87,
+                        color: isSelected ? Colors.black : Colors.grey[600],
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
                   ],
                 ),
-              )
-              : Column(
-                children: [
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: isSelected ? Colors.black : Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        icon,
-                        color: isSelected ? Colors.white : Colors.black54,
-                        size: 28,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 6),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      color: isSelected ? Colors.black : Colors.grey[600],
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
+          ),
     );
   }
 
   List<Image> imgList = [
     Image.asset('assets/splash.png', fit: BoxFit.cover),
+
     Image.asset('assets/big_image.jpg', fit: BoxFit.cover),
   ];
 }
