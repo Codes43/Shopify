@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopify/provider/cartprovider.dart';
+import 'package:shopify/screens/placeorderpage.dart';
 
 class ShoppingCartScreen extends StatefulWidget {
   const ShoppingCartScreen({super.key});
@@ -254,8 +255,15 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                                 ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () async {
+                              await cartProvider.removeItem(item.id);
+                              _loadCartItems();
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   );
@@ -308,7 +316,12 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    _loadCartItems();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PlaceOrderPage(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
