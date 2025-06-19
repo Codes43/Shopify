@@ -6,7 +6,6 @@ import 'package:badges/badges.dart' as badges;
 import 'package:shopify/provider/cartprovider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shopify/provider/favorites_provider.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -15,11 +14,9 @@ import 'package:shopify/screens/productdetails.dart';
 import 'package:shopify/models/product_model.dart'; // Import your Product model
 import 'package:shopify/services/product_service.dart';
 import 'package:shopify/services/auth_service.dart';
-import 'package:shopify/screens/profilescreen.dart';
-import 'package:shopify/screens/bookmarkscreen.dart';
-
-import 'loginpage.dart';
 import 'searchresultspage.dart';
+import 'package:shopify/widgets/common_bottom_nav.dart';
+
 //badge
 
 class HomePage extends StatefulWidget {
@@ -91,21 +88,21 @@ void _fetchProductsForCategory(String category) {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                    badges.Badge(
-                              badgeContent: Text('${cartProvider.itemCount}'),
-                              child: IconButton(
-                                icon: Icon(Icons.shopping_cart, color: Colors.white),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const ShoppingCartScreen(),
-                                      fullscreenDialog: true,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),,
+                badges.Badge(
+                  badgeContent: Text('${cartProvider.itemCount}'),
+                  child: IconButton(
+                    icon: Icon(Icons.shopping_cart, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ShoppingCartScreen(),
+                          fullscreenDialog: true,
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),
@@ -421,16 +418,12 @@ void _fetchProductsForCategory(String category) {
                   showBadge: favoritesProvider.favorites.isNotEmpty,
                   child: const Icon(Icons.bookmark_border),
                 ),
-                label: 'Bookmarks',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
-          );
-        },
+              ],
+            ),
+          ),
+        ),
       ),
+      bottomNavigationBar: CommonBottomNav(currentIndex: 0),
     );
   }
 
