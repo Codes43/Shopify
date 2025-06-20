@@ -117,7 +117,10 @@ class _SignUpPageState extends State<SignupPage> {
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => LoginPage()),
+            );
           },
         ),
       ),
