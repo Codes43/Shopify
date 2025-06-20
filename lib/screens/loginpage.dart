@@ -161,16 +161,32 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _loginUser();
-                              print('Login pressed');
-                            }
-                          },
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
+                          onPressed:
+                              isLoading
+                                  ? null
+                                  : () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _loginUser();
+                                      print('Login pressed');
+                                    }
+                                  },
+                          child:
+                              isLoading
+                                  ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                  : const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                         ),
                       ),
                       const SizedBox(height: 24),
