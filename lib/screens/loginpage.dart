@@ -207,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                           );
                         },
                         child: Text(
-                          'Signup',
+                          'Sign up',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.red,
