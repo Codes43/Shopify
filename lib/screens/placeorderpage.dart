@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shopify/widgets/common_bottom_nav.dart';
-//import 'package:provider/provider.dart';
-//import 'package:shopify/screens/ShoppingCartScreen.dart';
-
 
 class PlaceOrderPage extends StatefulWidget {
   const PlaceOrderPage({super.key});
@@ -323,6 +320,90 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                         ),
                       ],
                     ],
+                  ),
+                ),
+                // --- Order Summary Card ---
+                SizedBox(height: 16),
+                Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Subtotal', style: TextStyle(fontSize: 16)),
+                            Text('\$120.00', style: TextStyle(fontSize: 16)),
+                          ],
+                        ),
+                        SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Delivery Fee',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            Text(
+                              selectedDeliveryMethod == 'Express Delivery'
+                                  ? '\$10.00'
+                                  : '\$5.00',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        Divider(height: 24, thickness: 1),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Total',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              selectedDeliveryMethod == 'Express Delivery'
+                                  ? '\$130.00'
+                                  : '\$125.00',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                // --- Submit Order Button ---
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      // TODO: Implement order submission logic
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Order submitted!')),
+                      );
+                    },
+                    child: Text(
+                      'Submit Order',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
                   ),
                 ),
               ],
