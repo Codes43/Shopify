@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopify/screens/productdetails.dart';
-import 'loginpage.dart';
-import 'homepage.dart';
-import 'profilescreen.dart';
 import 'package:shopify/models/product_model.dart';
 import 'package:shopify/services/product_service.dart';
-import 'package:shopify/screens/bookmarkscreen.dart' as bookmark;
 import 'package:shopify/widgets/common_bottom_nav.dart';
 
 class SearchResultsPage extends StatefulWidget {
